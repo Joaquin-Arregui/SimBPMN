@@ -54,10 +54,38 @@ class BPMNEndEvent(BPMNElement):
         super().__init__(name, id_bpmn, bpmn_type)
         self.subTask = subTask
 
+class BPMNManualTask(BPMNElement):
+    def __init__(self, name: str, id_bpmn: str, bpmn_type: str, userTask: List[str], numberOfExecutions: int, minimumTime: int, maximumTime: int, subTask: BPMNElement):
+        super().__init__(name, id_bpmn, bpmn_type)
+        self.userTask = userTask
+        self.numberOfExecutions = numberOfExecutions
+        self.minimumTime = minimumTime
+        self.maximumTime = maximumTime
+        self.subTask = subTask
+
+class BPMNUserTask(BPMNElement):
+    def __init__(self, name: str, id_bpmn: str, bpmn_type: str, userTask: List[str], numberOfExecutions: int, minimumTime: int, maximumTime: int, subTask: BPMNElement):
+        super().__init__(name, id_bpmn, bpmn_type)
+        self.userTask = userTask
+        self.numberOfExecutions = numberOfExecutions
+        self.minimumTime = minimumTime
+        self.maximumTime = maximumTime
+        self.subTask = subTask
+
+class BPMNParallelGateway(BPMNElement):
+    def __init__(self, name: str, id_bpmn: str, bpmn_type: str, subTask: List[BPMNElement]):
+        super().__init__(name, id_bpmn, bpmn_type)
+        self.subTask = subTask
+
+class BPMNInclusiveGateway(BPMNElement):
+    def __init__(self, name: str, id_bpmn: str, bpmn_type: str, subTask: List[BPMNElement]):
+        super().__init__(name, id_bpmn, bpmn_type)
+        self.subTask = subTask
+
 def parse_bpmn_elements(file_content: str):
     elements = {}
     element_pattern = re.compile(r'Element: \[type=(?P<type>[a-zA-Z:]+), name=(?P<name>[^,]+), id_bpmn=(?P<id_bpmn>[^,]+)(?:, (.*))?\]')
-    
+
     for line in file_content.splitlines():
         match = element_pattern.match(line)
 
@@ -109,7 +137,31 @@ def parse_bpmn_elements(file_content: str):
             elif element_type == "EndEvent":
                 subTask = re.search(r'subTask="([^"]*)"', line).group(1) or None
                 element = BPMNEndEvent(name, id_bpmn, bpmn_type, subTask)
+
+            elif element_type == "ManualTask":
+                userTask = re.search(r'userTask="([^"]+)"', line).group(1).split(', ')
+                numberOfExecutions = int(re.search(r'numberOfExecutions=(\d+)', line).group(1))
+                minimumTime = int(re.search(r'minimumTime=(\d+)', line).group(1))
+                maximumTime = int(re.search(r'maximumTime=(\d+)', line).group(1))
+                subTask = re.search(r'subTask="([^"]+)"', line).group(1)
+                element = BPMNTask(name, id_bpmn, bpmn_type, userTask, numberOfExecutions, minimumTime, maximumTime, subTask)
             
+            elif element_type == "UserTask":
+                userTask = re.search(r'userTask="([^"]+)"', line).group(1).split(', ')
+                numberOfExecutions = int(re.search(r'numberOfExecutions=(\d+)', line).group(1))
+                minimumTime = int(re.search(r'minimumTime=(\d+)', line).group(1))
+                maximumTime = int(re.search(r'maximumTime=(\d+)', line).group(1))
+                subTask = re.search(r'subTask="([^"]+)"', line).group(1)
+                element = BPMNTask(name, id_bpmn, bpmn_type, userTask, numberOfExecutions, minimumTime, maximumTime, subTask)
+
+            elif element_type == "ParallelGateway":
+                subTask = re.search(r'subTask="([^"]+)"', line).group(1).split(', ')
+                element = BPMNParallelGateway(name, id_bpmn, bpmn_type, subTask)
+
+            elif element_type == "InclusiveGateway":
+                subTask = re.search(r'subTask="([^"]+)"', line).group(1).split(', ')
+                element = BPMNInclusiveGateway(name, id_bpmn, bpmn_type, subTask)
+
             elements[element.id_bpmn] = element
 
     return elements, process, start
