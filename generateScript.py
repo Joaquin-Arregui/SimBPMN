@@ -28,9 +28,10 @@ def {element.id_bpmn}(env, name):
 def task(elements, element, script):
     functionStr = f"""
 def {element.id_bpmn}(env, name):
+    time = random.randint({element.minimumTime}, {element.maximumTime})
     with open('results/results_{next(iter(elements))}.txt', 'a') as f:
-        f.write('''\n''' + name + ': [type={element.bpmn_type}, name={element.name}, id_bpmn={element.id_bpmn}, userTask="jl", numberOfExecutions={element.numberOfExecutions}, time=' + str(random.randint({element.minimumTime}, {element.maximumTime})) + ', subTask="{element.subTask}", startTime=' + str(env.now) + ']')
-    yield env.timeout(random.randint({element.minimumTime}, {element.maximumTime}))
+        f.write('''\n''' + name + ': [type={element.bpmn_type}, name={element.name}, id_bpmn={element.id_bpmn}, userTask="jl", numberOfExecutions={element.numberOfExecutions}, time=' + str(time) + ', subTask="{element.subTask}", startTime=' + str(env.now) + ']')
+    yield env.timeout(time)
     return '{element.subTask}'
     """
     return generateFunction(elements, element.subTask, script + functionStr)
@@ -41,9 +42,10 @@ def serviceTask(elements, element, script):
 def manualTask(elements, element, script):
     functionStr = f"""
 def {element.id_bpmn}(env, name):
+    time = random.randint({element.minimumTime}, {element.maximumTime})
     with open('results/results_{next(iter(elements))}.txt', 'a') as f:
-        f.write('''\n''' + name + ': [type={element.bpmn_type}, name={element.name}, id_bpmn={element.id_bpmn}, userTask="jl", numberOfExecutions={element.numberOfExecutions}, time=' + str(random.randint({element.minimumTime}, {element.maximumTime})) + ', subTask="{element.subTask}", startTime=' + str(env.now) + ']')
-    yield env.timeout(random.randint({element.minimumTime}, {element.maximumTime}))
+        f.write('''\n''' + name + ': [type={element.bpmn_type}, name={element.name}, id_bpmn={element.id_bpmn}, userTask="jl", numberOfExecutions={element.numberOfExecutions}, time=' + str(time) + ', subTask="{element.subTask}", startTime=' + str(env.now) + ']')
+    yield env.timeout(time)
     return '{element.subTask}'
     """
     return generateFunction(elements, element.subTask, script + functionStr)
@@ -51,9 +53,10 @@ def {element.id_bpmn}(env, name):
 def userTask(elements, element, script):
     functionStr = f"""
 def {element.id_bpmn}(env, name):
+    time = random.randint({element.minimumTime}, {element.maximumTime})
     with open('results/results_{next(iter(elements))}.txt', 'a') as f:
-        f.write('''\n''' + name + ': [type={element.bpmn_type}, name={element.name}, id_bpmn={element.id_bpmn}, userTask="jl", numberOfExecutions={element.numberOfExecutions}, time=' + str(random.randint({element.minimumTime}, {element.maximumTime})) + ', subTask="{element.subTask}", startTime=' + str(env.now) + ']')
-    yield env.timeout(random.randint({element.minimumTime}, {element.maximumTime}))
+        f.write('''\n''' + name + ': [type={element.bpmn_type}, name={element.name}, id_bpmn={element.id_bpmn}, userTask="jl", numberOfExecutions={element.numberOfExecutions}, time=' + str(time) + ', subTask="{element.subTask}", startTime=' + str(env.now) + ']')
+    yield env.timeout(time)
     return '{element.subTask}'
     """
     return generateFunction(elements, element.subTask, script + functionStr)
