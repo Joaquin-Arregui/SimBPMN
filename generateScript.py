@@ -115,7 +115,7 @@ def generateFunction(elements, elementId, script):
     element = elements[elementId]
     elementType = type(element).__name__
     if elementType == "BPMNExclusiveGateway":
-        return parallelGateway(elements, element, script)
+        return exclusiveGateway(elements, element, script)
     elif elementType == "BPMNTask":
         return task(elements, element, script)
     elif elementType == "BPMNServiceTask":
