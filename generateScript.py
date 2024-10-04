@@ -15,7 +15,7 @@ def exclusiveGateway(elements, element, script):
     functionStr = f"""
 def {element.id_bpmn}(env, name):
     selectedElement = random.choices({possibleElements}, {percents})[0]
-    with open('results_{next(iter(elements))}.txt', 'a') as f:
+    with open('results/results_{next(iter(elements))}.txt', 'a') as f:
         f.write('''\n''' + name + ': Element: [type={element.bpmn_type}, name={element.name}, id_bpmn={element.name}, subTask="' + selectedElement + '"]')
     return selectedElement
     """
@@ -29,7 +29,7 @@ def {element.id_bpmn}(env, name):
 def task(elements, element, script):
     functionStr = f"""
 def {element.id_bpmn}(env, name):
-    with open('results_{next(iter(elements))}.txt', 'a') as f:
+    with open('results/results_{next(iter(elements))}.txt', 'a') as f:
         f.write('''\n''' + name + ': Element: [type={element.bpmn_type}, name={element.name}, id_bpmn={element.id_bpmn}, userTask="jl", numberOfExecutions={element.numberOfExecutions}, time='+str(random.randint({element.minimumTime}, {element.maximumTime}))+', subTask="{element.subTask}"]')
     yield env.timeout(random.randint({element.minimumTime}, {element.maximumTime}))
     """
@@ -81,7 +81,7 @@ def mainServiceTask(elements, element, script):
 def mainEndEvent(elements, element, script):
     script = script + f"""
         if nextTask == '{element.id_bpmn}':
-            with open('results_{next(iter(elements))}.txt', 'a') as f:
+            with open('results/results_{next(iter(elements))}.txt', 'a') as f:
                 f.write('''\n''' + name + ': Element: [type={element.bpmn_type}, name={element.name}, id_bpmn={element.id_bpmn}, subTask=""]')
             nextTask = ''"""
     return script
@@ -118,10 +118,10 @@ def start_process(env, name):
     scriptMainFunction = generateMainFunction(elements, startEvent.subTask, scriptMainFunction)
     script = script + scriptMainFunction + """
 def main(env):
-    with open('results_"""+ next(iter(elements)) + """.txt', 'a') as f:
+    with open('results/results_"""+ next(iter(elements)) + """.txt', 'a') as f:
             f.write("Element: [type=""" + f'{elementProcess.bpmn_type}, name={elementProcess.name}, id_bpmn={elementProcess.id_bpmn}, instances={elementProcess.instances}, frequency={elementProcess.frequency}]")'  + """
     for i in range (nInstances):
-        with open('results_"""+ next(iter(elements)) + """.txt', 'a') as f:
+        with open('results/results_"""+ next(iter(elements)) + """.txt', 'a') as f:
             f.write(f'''\nInstance {i+1}: Element: [type=""" + startEvent.bpmn_type + ', name=' + startEvent.name + ', id_bpmn=' + startEvent.id_bpmn + ', subTask="'+ startEvent.subTask + """"]''')
         env.process(start_process(env, f'Instance {i+1}'))
         yield env.timeout(frequency)

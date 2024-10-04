@@ -2,7 +2,7 @@ import subprocess
 import os
 from generateScript import generateScript
 
-rulesPath = 'rules.txt'
+rulesPath = 'rules/rules.txt'
 
 with open(rulesPath, 'r') as f:
     file_content = f.read()
