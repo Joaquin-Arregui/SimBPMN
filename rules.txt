@@ -1,0 +1,16 @@
+### Esper Rules Export ###
+
+Element: [type=bpmn:Process, name=Unnamed, id_bpmn=Process_1, instances=20, frequency=40]
+Element: [type=bpmn:StartEvent, name=Unnamed, id_bpmn=StartEvent_0offpno, subTask="Gateway_0qga3of"]
+Element: [type=bpmn:ExclusiveGateway, name=Unnamed, id_bpmn=Gateway_0qga3of, subTask="Activity_1r1vk2z, Activity_0d5rvvx"]
+Element: [type=bpmn:SequenceFlow, name=Unnamed, id_bpmn=Flow_0pqjhmz, superElement="StartEvent_0offpno", subElement="Gateway_0qga3of"]
+Element: [type=bpmn:Task, name=Unnamed, id_bpmn=Activity_1r1vk2z, userTask="jl, alba", numberOfExecutions=2, minimumTime=20, maximumTime=40, subTask="Activity_1mrbi73"]
+Element: [type=bpmn:SequenceFlow, name=Unnamed, id_bpmn=Flow_1uxvcj5, percentageOfBranches=70, superElement="Gateway_0qga3of", subElement="Activity_1r1vk2z"]
+Element: [type=bpmn:Task, name=Unnamed, id_bpmn=Activity_1mrbi73, userTask="jl,alba", numberOfExecutions=2, minimumTime=10, maximumTime=30, subTask="Event_1qr2r1y"]
+Element: [type=bpmn:SequenceFlow, name=Unnamed, id_bpmn=Flow_1t97n81, superElement="Activity_1r1vk2z", subElement="Activity_1mrbi73"]
+Element: [type=bpmn:Task, name=Unnamed, id_bpmn=Activity_0d5rvvx, userTask="alba", numberOfExecutions=2, minimumTime=10, maximumTime=20, subTask="Event_0pfkrjg"]
+Element: [type=bpmn:SequenceFlow, name=Unnamed, id_bpmn=Flow_168m8d9, percentageOfBranches=30, superElement="Gateway_0qga3of", subElement="Activity_0d5rvvx"]
+Element: [type=bpmn:EndEvent, name=Unnamed, id_bpmn=Event_0pfkrjg, subTask=""]
+Element: [type=bpmn:SequenceFlow, name=Unnamed, id_bpmn=Flow_00rvuul, superElement="Activity_0d5rvvx", subElement="Event_0pfkrjg"]
+Element: [type=bpmn:EndEvent, name=Unnamed, id_bpmn=Event_1qr2r1y, subTask=""]
+Element: [type=bpmn:SequenceFlow, name=Unnamed, id_bpmn=Flow_1hq8etr, superElement="Activity_1mrbi73", subElement="Event_1qr2r1y"]

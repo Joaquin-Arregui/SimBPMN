@@ -2,36 +2,37 @@ import re
 from typing import List, Union
 
 class BPMNElement:
-    def __init__(self, name: str, id_bpmn: str):
+    def __init__(self, name: str, id_bpmn: str, bpmn_type: str):
         self.name = name
         self.id_bpmn = id_bpmn
+        self.bpmn_type = bpmn_type
 
 class BPMNProcess(BPMNElement):
-    def __init__(self, name: str, id_bpmn: str, instances: int, frequency: int):
-        super().__init__(name, id_bpmn)
+    def __init__(self, name: str, id_bpmn: str, bpmn_type: str, instances: int, frequency: int):
+        super().__init__(name, id_bpmn, bpmn_type)
         self.instances = instances
         self.frequency = frequency
 
 class BPMNStartEvent(BPMNElement):
-    def __init__(self, name: str, id_bpmn: str, subTask: BPMNElement):
-        super().__init__(name, id_bpmn)
+    def __init__(self, name: str, id_bpmn: str, bpmn_type: str, subTask: BPMNElement):
+        super().__init__(name, id_bpmn, bpmn_type)
         self.subTask = subTask
 
 class BPMNExclusiveGateway(BPMNElement):
-    def __init__(self, name: str, id_bpmn: str, subTask: List[BPMNElement]):
-        super().__init__(name, id_bpmn)
+    def __init__(self, name: str, id_bpmn: str, bpmn_type: str, subTask: List[BPMNElement]):
+        super().__init__(name, id_bpmn, bpmn_type)
         self.subTask = subTask
 
 class BPMNSequenceFlow(BPMNElement):
-    def __init__(self, name: str, id_bpmn: str, superElement: BPMNElement, subElement: BPMNElement, percentageOfBranches: float = None):
-        super().__init__(name, id_bpmn)
+    def __init__(self, name: str, id_bpmn: str, bpmn_type: str, superElement: BPMNElement, subElement: BPMNElement, percentageOfBranches: float = None):
+        super().__init__(name, id_bpmn, bpmn_type)
         self.superElement = superElement
         self.subElement = subElement
         self.percentageOfBranches = percentageOfBranches
 
 class BPMNTask(BPMNElement):
-    def __init__(self, name: str, id_bpmn: str, userTask: List[str], numberOfExecutions: int, minimumTime: int, maximumTime: int, subTask: BPMNElement):
-        super().__init__(name, id_bpmn)
+    def __init__(self, name: str, id_bpmn: str, bpmn_type: str, userTask: List[str], numberOfExecutions: int, minimumTime: int, maximumTime: int, subTask: BPMNElement):
+        super().__init__(name, id_bpmn, bpmn_type)
         self.userTask = userTask
         self.numberOfExecutions = numberOfExecutions
         self.minimumTime = minimumTime
@@ -39,8 +40,8 @@ class BPMNTask(BPMNElement):
         self.subTask = subTask
 
 class BPMNServiceTask(BPMNElement):
-    def __init__(self, name: str, id_bpmn: str, sodSecurity: bool, bodSecurity: bool, uocSecurity: bool, nu: int, mth: int, subTask: List[BPMNElement]):
-        super().__init__(name, id_bpmn)
+    def __init__(self, name: str, id_bpmn: str, bpmn_type: str, sodSecurity: bool, bodSecurity: bool, uocSecurity: bool, nu: int, mth: int, subTask: List[BPMNElement]):
+        super().__init__(name, id_bpmn, bpmn_type)
         self.sodSecurity = sodSecurity
         self.bodSecurity = bodSecurity
         self.uocSecurity = uocSecurity
@@ -49,8 +50,8 @@ class BPMNServiceTask(BPMNElement):
         self.subTask = subTask
 
 class BPMNEndEvent(BPMNElement):
-    def __init__(self, name: str, id_bpmn: str, subTask: Union[BPMNElement, None]):
-        super().__init__(name, id_bpmn)
+    def __init__(self, name: str, id_bpmn: str, bpmn_type: str, subTask: Union[BPMNElement, None]):
+        super().__init__(name, id_bpmn, bpmn_type)
         self.subTask = subTask
 
 def parse_bpmn_elements(file_content: str):
@@ -64,28 +65,29 @@ def parse_bpmn_elements(file_content: str):
             element_type = match.group("type").split(":")[-1]
             name = match.group("name").strip('"')
             id_bpmn = match.group("id_bpmn")
+            bpmn_type = match.group("type")
 
             if element_type == "Process":
                 process = id_bpmn
                 instances = int(re.search(r'instances=(\d+)', line).group(1))
                 frequency = int(re.search(r'frequency=(\d+)', line).group(1))
-                element = BPMNProcess(name, id_bpmn, instances, frequency)
+                element = BPMNProcess(name, id_bpmn, bpmn_type, instances, frequency)
 
             elif element_type == "StartEvent":
                 start = id_bpmn
                 subTask = re.search(r'subTask="([^"]+)"', line).group(1)
-                element = BPMNStartEvent(name, id_bpmn, subTask)
+                element = BPMNStartEvent(name, id_bpmn, bpmn_type, subTask)
 
             elif element_type == "ExclusiveGateway":
                 subTask = re.search(r'subTask="([^"]+)"', line).group(1).split(', ')
-                element = BPMNExclusiveGateway(name, id_bpmn, subTask)
+                element = BPMNExclusiveGateway(name, id_bpmn, bpmn_type, subTask)
 
             elif element_type == "SequenceFlow":
                 superElement = re.search(r'superElement="([^"]+)"', line).group(1)
                 subElement = re.search(r'subElement="([^"]+)"', line).group(1)
                 percentage = re.search(r'percentageOfBranches=(\d+)', line)
                 percentage = float(percentage.group(1)) if percentage else None
-                element = BPMNSequenceFlow(name, id_bpmn, superElement, subElement, percentage)
+                element = BPMNSequenceFlow(name, id_bpmn, bpmn_type, superElement, subElement, percentage)
 
             elif element_type == "Task":
                 userTask = re.search(r'userTask="([^"]+)"', line).group(1).split(', ')
@@ -93,7 +95,7 @@ def parse_bpmn_elements(file_content: str):
                 minimumTime = int(re.search(r'minimumTime=(\d+)', line).group(1))
                 maximumTime = int(re.search(r'maximumTime=(\d+)', line).group(1))
                 subTask = re.search(r'subTask="([^"]+)"', line).group(1)
-                element = BPMNTask(name, id_bpmn, userTask, numberOfExecutions, minimumTime, maximumTime, subTask)
+                element = BPMNTask(name, id_bpmn, bpmn_type, userTask, numberOfExecutions, minimumTime, maximumTime, subTask)
 
             elif element_type == "ServiceTask":
                 sodSecurity = re.search(r'sodSecurity=(\w+)', line).group(1) == "true"
@@ -102,35 +104,12 @@ def parse_bpmn_elements(file_content: str):
                 nu = int(re.search(r'nu=(\d+)', line).group(1))
                 mth = int(re.search(r'mth=(\d+)', line).group(1))
                 subTask = re.search(r'subTask="([^"]+)"', line).group(1).split(', ')
-                element = BPMNServiceTask(name, id_bpmn, sodSecurity, bodSecurity, uocSecurity, nu, mth, subTask)
+                element = BPMNServiceTask(name, id_bpmn, bpmn_type, sodSecurity, bodSecurity, uocSecurity, nu, mth, subTask)
 
             elif element_type == "EndEvent":
                 subTask = re.search(r'subTask="([^"]*)"', line).group(1) or None
-                element = BPMNEndEvent(name, id_bpmn, subTask)
+                element = BPMNEndEvent(name, id_bpmn, bpmn_type, subTask)
             
             elements[element.id_bpmn] = element
 
     return elements, process, start
-
-# file_content = """
-# ### Esper Rules Export ###
-
-# Element: [type=bpmn:Process, name=Unnamed, id_bpmn=Process_1, instances=20, frequency=40]
-# Element: [type=bpmn:StartEvent, name=Unnamed, id_bpmn=StartEvent_0offpno, subTask="Gateway_0qga3of"]
-# Element: [type=bpmn:ExclusiveGateway, name=Unnamed, id_bpmn=Gateway_0qga3of, subTask="Activity_1r1vk2z, Activity_0d5rvvx"]
-# Element: [type=bpmn:SequenceFlow, name=Unnamed, id_bpmn=Flow_0pqjhmz, superElement="StartEvent_0offpno", subElement="Gateway_0qga3of"]
-# Element: [type=bpmn:Task, name=Unnamed, id_bpmn=Activity_1r1vk2z, userTask="jl, alba", numberOfExecutions=2, minimumTime=20, maximumTime=40, subTask="Activity_1mrbi73"]
-# Element: [type=bpmn:SequenceFlow, name=Unnamed, id_bpmn=Flow_1uxvcj5, percentageOfBranches=70, superElement="Gateway_0qga3of", subElement="Activity_1r1vk2z"]
-# Element: [type=bpmn:Task, name=Unnamed, id_bpmn=Activity_1mrbi73, userTask="jl,alba", numberOfExecutions=2, minimumTime=20, maximumTime=40, subTask="Event_1qr2r1y"]
-# Element: [type=bpmn:SequenceFlow, name=Unnamed, id_bpmn=Flow_1t97n81, superElement="Activity_1r1vk2z", subElement="Activity_1mrbi73"]
-# Element: [type=bpmn:Task, name=Unnamed, id_bpmn=Activity_0d5rvvx, userTask="alba", numberOfExecutions=2, minimumTime=20, maximumTime=40, subTask="Event_0pfkrjg"]
-# Element: [type=bpmn:SequenceFlow, name=Unnamed, id_bpmn=Flow_168m8d9, percentageOfBranches=30, superElement="Gateway_0qga3of", subElement="Activity_0d5rvvx"]
-# Element: [type=bpmn:EndEvent, name=Unnamed, id_bpmn=Event_0pfkrjg, subTask=""]
-# Element: [type=bpmn:SequenceFlow, name=Unnamed, id_bpmn=Flow_00rvuul, superElement="Activity_0d5rvvx", subElement="Event_0pfkrjg"]
-# Element: [type=bpmn:EndEvent, name=Unnamed, id_bpmn=Event_1qr2r1y, subTask=""]
-# Element: [type=bpmn:SequenceFlow, name=Unnamed, id_bpmn=Flow_1hq8etr, superElement="Activity_1mrbi73", subElement="Event_1qr2r1y"]"""
-
-# elements = parse_bpmn_elements(file_content)
-# for elem in elements.keys():
-#     element = elements[elem]
-#     print(type(element).__name__ + " " + element.id_bpmn + ": " + str(vars(element)))
