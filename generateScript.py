@@ -92,11 +92,11 @@ def {element.id_bpmn}(env, name):
     percents = {percents}
     selectedElements = [element for element, percent in zip(elements, percents) if random.random() < percent]
     if not selectedElements:
-        selectedElements = [random.choice(elements)]
+        selectedElements = random.choices(elements, weights=percents, k=1)
     strSelectedElements = ", ".join(selectedElements)
     with open('results/results_Process_1.txt', 'a') as f:
         f.write('''
-''' + name + ': Element: [type={element.bpmn_type}, name={element.name}, id_bpmn={element.id_bpmn}, subTask="' + strSelectedElements + '", startTime=' + str(env.now) + ']')
+''' + name + ': [type={element.bpmn_type}, name={element.name}, id_bpmn={element.id_bpmn}, subTask="' + strSelectedElements + '", startTime=' + str(env.now) + ']')
     yield env.timeout(0)
     return selectedElements
     """
@@ -145,26 +145,33 @@ def checkServiceTasks(name):
     for element in elements.values():
         if element.bpmn_type == 'bpmn:ServiceTask':
             script = script + """
-        found1"""
+        found1=False
+        activities = {"""
             subTasks = element.subTask
-            for n in range(len(subTasks)):
-                script = script + ' = found' + str(n+2)
-            script = script + f''' = False
+            for subElement in subTasks:
+                if subElement != subTasks[-1]:
+                    script = script + f'''
+            '{subElement}': False,'''
+                else:
+                    script = script + f'''
+            '{subElement}': False'''
+            script = script + '''
+        }''' + f'''
         for line in content:
             if name in line and 'id_bpmn={element.id_bpmn}' in line:
-                found1 = True'''
-            for n in range(len(subTasks)):
-                script = script + f"""
-            elif name in line and 'id_bpmn={elements[subTasks[n]].id_bpmn}' in line:
-                found{str(n+2)} = True"""
-            script = script + """
-        if not found1"""
-            for n in range(len(subTasks)):
-                script = script + f" and found{n+2}"
-            script = script + f''':
-            f.write("""
-""" + name + ': [type={element.bpmn_type}, name={element.name}, id_bpmn={element.id_bpmn}, sodSecurity={element.sodSecurity}, bodSecurity={element.bodSecurity}, uocSecurity={element.uocSecurity}, nu={element.nu}, mth={element.mth}, subTask="''' + ", ".join(subTasks) + '''"]')
-'''
+                found1 = True''' + '''
+            for activity in activities:
+                if name in line and f'id_bpmn={activity}' in line:
+                    activities[activity] = True'''
+            n = 1 if element.uocSecurity else 2
+            script = script + f"""
+        number_found = sum(activities.values())
+        if not found1 and number_found >= {n}:
+            subtasks_str = ", ".join([activity for activity, found in activities.items() if found])"""
+            script = script + f"""
+            f.write('''
+''' + name + ': [type={element.bpmn_type}, name={element.name}, id_bpmn={element.id_bpmn}, sodSecurity={element.sodSecurity}, bodSecurity={element.bodSecurity}, uocSecurity={element.uocSecurity}, nu={element.nu}, mth={element.mth}, subTask="' + subtasks_str + '"]')
+"""
     return script
 
 
@@ -191,11 +198,9 @@ def process_task(env, name, task_name):
                 env.process(process_task(env, name, next_task))
         else:
             env.process(process_task(env, name, result))
-    checkServiceTasks(name)
 
 def start_process(env, name):
-    env.process(process_task(env, name, '{startEvent.subTask}'))
-    yield env.timeout(0)
+    yield env.process(process_task(env, name, '{startEvent.subTask}'))
 
 def main(env):
     with open('results/results_"""+ next(iter(elements)) + """.txt', 'a') as f:
@@ -209,5 +214,7 @@ def main(env):
 env = simpy.Environment()
 env.process(main(env))
 env.run()
+for i in range(nInstances):
+    checkServiceTasks(f'Instance {i+1}')
 """
     return script + scriptServiceTask + scriptMainFunction, process
