@@ -139,40 +139,45 @@ def generateFunction(elements, elementId, script):
 def serviceTask(elements):
     script = f"""
 def checkServiceTasks(name):
-    with open('results/results_{next(iter(elements))}.txt', 'a+') as f:
-        f.seek(0)
+    with open('results/results_{next(iter(elements))}.txt', 'r') as f:
         content = f.readlines()"""
     for element in elements.values():
         if element.bpmn_type == 'bpmn:ServiceTask':
             script = script + """
-        found1=False
-        activities = {"""
+    found1=False
+    activities = {"""
             subTasks = element.subTask
             for subElement in subTasks:
                 if subElement != subTasks[-1]:
                     script = script + f'''
-            '{subElement}': False,'''
+        '{subElement}': False,'''
                 else:
                     script = script + f'''
-            '{subElement}': False'''
+        '{subElement}': False'''
             script = script + '''
-        }''' + f'''
-        for line in content:
-            if name in line and 'id_bpmn={element.id_bpmn}' in line:
-                found1 = True''' + '''
-            for activity in activities:
-                if name in line and f'id_bpmn={activity}' in line:
-                    activities[activity] = True'''
+    }''' + f'''
+    last_activity_index = -1
+    line_index = -1
+    for line in content:
+        line_index += 1
+        if name in line and 'id_bpmn={element.id_bpmn}' in line:
+            found1 = True''' + '''
+        for activity in activities:
+            if name in line and f'id_bpmn={activity}' in line:
+                activities[activity] = True
+                last_activity_index = line_index'''
             n = 1 if element.uocSecurity else 2
             script = script + f"""
-        number_found = sum(activities.values())
-        if not found1 and number_found >= {n}:
-            subtasks_str = ", ".join([activity for activity, found in activities.items() if found])"""
-            script = script + f"""
-            f.write('''
-''' + name + ': [type={element.bpmn_type}, name={element.name}, id_bpmn={element.id_bpmn}, sodSecurity={element.sodSecurity}, bodSecurity={element.bodSecurity}, uocSecurity={element.uocSecurity}, nu={element.nu}, mth={element.mth}, subTask="' + subtasks_str + '"]')
+    number_found = sum(activities.values())
+    if not found1 and number_found >= {n} and last_activity_index != -1:
+        subtasks_str = ", ".join([activity for activity, found in activities.items() if found])
+        new_line = name + ': [type={element.bpmn_type}, name={element.name}, id_bpmn={element.id_bpmn}, sodSecurity={element.sodSecurity}, bodSecurity={element.bodSecurity}, uocSecurity={element.uocSecurity}, nu={element.nu}, mth={element.mth}, subTask="' + subtasks_str + '''"]
+'''
+        content.insert(last_activity_index+1, new_line)"""
+    return script + """
+    with open('results/results_Process_1.txt', 'w') as f:
+        f.writelines(content)
 """
-    return script
 
 
 def generateScript(content):
