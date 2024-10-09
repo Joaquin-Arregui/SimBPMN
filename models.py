@@ -8,10 +8,11 @@ class BPMNElement:
         self.bpmn_type = bpmn_type
 
 class BPMNProcess(BPMNElement):
-    def __init__(self, name: str, id_bpmn: str, bpmn_type: str, instances: int, frequency: int):
+    def __init__(self, name: str, id_bpmn: str, bpmn_type: str, instances: int, frequency: int, userPool: List[str]):
         super().__init__(name, id_bpmn, bpmn_type)
         self.instances = instances
         self.frequency = frequency
+        self.userPool = userPool
 
 class BPMNStartEvent(BPMNElement):
     def __init__(self, name: str, id_bpmn: str, bpmn_type: str, subTask: BPMNElement):
@@ -99,7 +100,8 @@ def parse_bpmn_elements(file_content: str):
                 process = id_bpmn
                 instances = int(re.search(r'instances=(\d+)', line).group(1))
                 frequency = int(re.search(r'frequency=(\d+)', line).group(1))
-                element = BPMNProcess(name, id_bpmn, bpmn_type, instances, frequency)
+                userPool = re.search(r'userPool="([^"]+)"', line).group(1).split(', ')
+                element = BPMNProcess(name, id_bpmn, bpmn_type, instances, frequency, userPool)
 
             elif element_type == "StartEvent":
                 start = id_bpmn
@@ -118,7 +120,7 @@ def parse_bpmn_elements(file_content: str):
                 element = BPMNSequenceFlow(name, id_bpmn, bpmn_type, superElement, subElement, percentage)
 
             elif element_type == "Task":
-                userTask = re.search(r'userTask="([^"]+)"', line).group(1).split(', ')
+                userTask = match.group(1).split(', ') if (match := re.search(r'userTask="([^"]+)"', line)) else None
                 numberOfExecutions = int(re.search(r'numberOfExecutions=(\d+)', line).group(1))
                 minimumTime = int(re.search(r'minimumTime=(\d+)', line).group(1))
                 maximumTime = int(re.search(r'maximumTime=(\d+)', line).group(1))
@@ -139,7 +141,7 @@ def parse_bpmn_elements(file_content: str):
                 element = BPMNEndEvent(name, id_bpmn, bpmn_type, subTask)
 
             elif element_type == "ManualTask":
-                userTask = re.search(r'userTask="([^"]+)"', line).group(1).split(', ')
+                userTask = match.group(1).split(', ') if (match := re.search(r'userTask="([^"]+)"', line)) else None
                 numberOfExecutions = int(re.search(r'numberOfExecutions=(\d+)', line).group(1))
                 minimumTime = int(re.search(r'minimumTime=(\d+)', line).group(1))
                 maximumTime = int(re.search(r'maximumTime=(\d+)', line).group(1))
@@ -147,7 +149,7 @@ def parse_bpmn_elements(file_content: str):
                 element = BPMNTask(name, id_bpmn, bpmn_type, userTask, numberOfExecutions, minimumTime, maximumTime, subTask)
             
             elif element_type == "UserTask":
-                userTask = re.search(r'userTask="([^"]+)"', line).group(1).split(', ')
+                userTask = match.group(1).split(', ') if (match := re.search(r'userTask="([^"]+)"', line)) else None
                 numberOfExecutions = int(re.search(r'numberOfExecutions=(\d+)', line).group(1))
                 minimumTime = int(re.search(r'minimumTime=(\d+)', line).group(1))
                 maximumTime = int(re.search(r'maximumTime=(\d+)', line).group(1))
