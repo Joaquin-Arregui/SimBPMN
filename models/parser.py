@@ -1,13 +1,12 @@
 import ast
 import re
 from models.baseModels import BPMNProcess, BPMNSequenceFlow, BPMNServiceTask
-from models.startEventModels import BPMNStartEvent, BPMNMessageStartEvent, BPMNTimerStartEvent, BPMNConditionalStartEvent, BPMNSignalStartEvent
-from models.gatewayModels import BPMNExclusiveGateway, BPMNInclusiveGateway, BPMNParallelGateway, BPMNComplexGateway, BPMNEventBasedGateway
+from models.startEventModels import BPMNStartEvent
+from models.gatewayModels import BPMNExclusiveGateway, BPMNInclusiveGateway, BPMNParallelGateway, BPMNEventBasedGateway
 from models.taskModels import BPMNTask, BPMNUserTask, BPMNSendTask, BPMNRecieveTask, BPMNManualTask, BPMNBusinessRuleTask, BPMNScriptTask, BPMNCallActivity
-from models.endEventModels import BPMNEndEvent, BPMNMessageEndEvent, BPMNEscalationEndEvent, BPMNErrorEndEvent, BPMNCompensationEndEvent, BPMNSignalEndEvent, BPMNTerminateEndEvent
-from models.intermediateEventModels import BPMNIntermediateThrowEvent, BPMNMessageIntermediateCatchEvent, BPMNMessageIntermediateThrowEvent, BPMNTimerIntermediateCatchEvent, BPMNEscalationIntermediateThrowEvent, BPMNConditionalIntermediateCatchEvent, BPMNLinkIntermediateCatchEvent, BPMNLinkIntermediateThrowEvent, BPMNCompensationIntermediateThrowEven, BPMNSignalIntermediateCatchEvent, BPMNSignalIntermediateThrowEvent
+from models.endEventModels import BPMNEndEvent
+from models.intermediateEventModels import BPMNIntermediateThrowEvent, BPMNMessageIntermediateCatchEvent, BPMNMessageIntermediateThrowEvent, BPMNTimerIntermediateCatchEvent
 from models.subprocessModels import BPMNSubProcess, BPMNTransaction
-from models.dataModels import BPMNDataObjectReference, BPMNDataStoreReference
 
 def parse_bpmn_elements(file_content: str):
     elements = {}
@@ -53,26 +52,6 @@ def parse_bpmn_elements(file_content: str):
                 subTask = re.search(r'subTask="([^"]+)"', line).group(1)
                 element = BPMNStartEvent(name, id_bpmn, bpmn_type, subTask)
 
-            elif element_type == "MessageStartEvent":
-                start = id_bpmn
-                subTask = re.search(r'subTask="([^"]+)"', line).group(1)
-                element = BPMNMessageStartEvent(name, id_bpmn, bpmn_type, subTask)
-
-            elif element_type == "TimerStartEvent":
-                start = id_bpmn
-                subTask = re.search(r'subTask="([^"]+)"', line).group(1)
-                element = BPMNTimerStartEvent(name, id_bpmn, bpmn_type, subTask)
-
-            elif element_type == "ConditionalStartEvent":
-                start = id_bpmn
-                subTask = re.search(r'subTask="([^"]+)"', line).group(1)
-                element = BPMNConditionalStartEvent(name, id_bpmn, bpmn_type, subTask)
-
-            elif element_type == "SignalStartEvent":
-                start = id_bpmn
-                subTask = re.search(r'subTask="([^"]+)"', line).group(1)
-                element = BPMNSignalStartEvent(name, id_bpmn, bpmn_type, subTask)
-
             elif element_type == "ExclusiveGateway":
                 subTask = re.search(r'subTask="([^"]+)"', line).group(1).split(', ')
                 element = BPMNExclusiveGateway(name, id_bpmn, bpmn_type, subTask)
@@ -84,10 +63,6 @@ def parse_bpmn_elements(file_content: str):
             elif element_type == "InclusiveGateway":
                 subTask = re.search(r'subTask="([^"]+)"', line).group(1).split(', ')
                 element = BPMNInclusiveGateway(name, id_bpmn, bpmn_type, subTask)
-
-            elif element_type == "ComplexGateway":
-                subTask = re.search(r'subTask="([^"]+)"', line).group(1).split(', ')
-                element = BPMNComplexGateway(name, id_bpmn, bpmn_type, subTask)
 
             elif element_type == "EventBasedGateway":
                 subTask = re.search(r'subTask="([^"]+)"', line).group(1).split(', ')
@@ -114,16 +89,18 @@ def parse_bpmn_elements(file_content: str):
                 numberOfExecutions = int(re.search(r'numberOfExecutions=(\d+)', line).group(1))
                 minimumTime = int(re.search(r'minimumTime=(\d+)', line).group(1))
                 maximumTime = int(re.search(r'maximumTime=(\d+)', line).group(1))
+                messageDestiny = re.search(r'messageDestiny=([^\s,]+)', line).group(1)
                 subTask = re.search(r'subTask="([^"]+)"', line).group(1)
-                element = BPMNSendTask(name, id_bpmn, bpmn_type, userTask, numberOfExecutions, minimumTime, maximumTime, subTask)
+                element = BPMNSendTask(name, id_bpmn, bpmn_type, userTask, numberOfExecutions, minimumTime, maximumTime, messageDestiny, subTask)
 
             elif element_type == "RecieveTask":
                 userTask = match.group(1).split(', ') if (match := re.search(r'userTask="([^"]+)"', line)) else None
                 numberOfExecutions = int(re.search(r'numberOfExecutions=(\d+)', line).group(1))
                 minimumTime = int(re.search(r'minimumTime=(\d+)', line).group(1))
                 maximumTime = int(re.search(r'maximumTime=(\d+)', line).group(1))
+                messageOrigin = re.search(r'messageOrigin=([^\s,]+)', line).group(1)
                 subTask = re.search(r'subTask="([^"]+)"', line).group(1)
-                element = BPMNRecieveTask(name, id_bpmn, bpmn_type, userTask, numberOfExecutions, minimumTime, maximumTime, subTask)
+                element = BPMNRecieveTask(name, id_bpmn, bpmn_type, userTask, numberOfExecutions, minimumTime, maximumTime, messageOrigin, subTask)
             
             elif element_type == "ManualTask":
                 userTask = match.group(1).split(', ') if (match := re.search(r'userTask="([^"]+)"', line)) else None
@@ -186,41 +163,6 @@ def parse_bpmn_elements(file_content: str):
                 subTask = re.search(r'subTask="([^"]+)"', line).group(1)
                 element = BPMNTimerIntermediateCatchEvent(name, id_bpmn, bpmn_type, subTask)
 
-            elif element_type == "EscalationIntermediateThrowEvent":
-                start = id_bpmn
-                subTask = re.search(r'subTask="([^"]+)"', line).group(1)
-                element = BPMNEscalationIntermediateThrowEvent(name, id_bpmn, bpmn_type, subTask)
-
-            elif element_type == "ConditionalIntermediateCatchEvent":
-                start = id_bpmn
-                subTask = re.search(r'subTask="([^"]+)"', line).group(1)
-                element = BPMNConditionalIntermediateCatchEvent(name, id_bpmn, bpmn_type, subTask)
-
-            elif element_type == "LinkIntermediateCatchEvent":
-                start = id_bpmn
-                subTask = re.search(r'subTask="([^"]+)"', line).group(1)
-                element = BPMNLinkIntermediateCatchEvent(name, id_bpmn, bpmn_type, subTask)
-
-            elif element_type == "LinkIntermediateThrowEvent":
-                start = id_bpmn
-                subTask = re.search(r'subTask="([^"]+)"', line).group(1)
-                element = BPMNLinkIntermediateThrowEvent(name, id_bpmn, bpmn_type, subTask)
-
-            elif element_type == "CompensationIntermediateThrowEven":
-                start = id_bpmn
-                subTask = re.search(r'subTask="([^"]+)"', line).group(1)
-                element = BPMNCompensationIntermediateThrowEven(name, id_bpmn, bpmn_type, subTask)
-
-            elif element_type == "SignalIntermediateCatchEvent":
-                start = id_bpmn
-                subTask = re.search(r'subTask="([^"]+)"', line).group(1)
-                element = BPMNSignalIntermediateCatchEvent(name, id_bpmn, bpmn_type, subTask)
-
-            elif element_type == "SignalIntermediateThrowEvent":
-                start = id_bpmn
-                subTask = re.search(r'subTask="([^"]+)"', line).group(1)
-                element = BPMNSignalIntermediateThrowEvent(name, id_bpmn, bpmn_type, subTask)
-
             elif element_type == "SubProcess":
                 start = id_bpmn
                 subTask = re.search(r'subTask="([^"]+)"', line).group(1)
@@ -231,43 +173,9 @@ def parse_bpmn_elements(file_content: str):
                 subTask = re.search(r'subTask="([^"]+)"', line).group(1)
                 element = BPMNTransaction(name, id_bpmn, bpmn_type, subTask)
 
-            elif element_type == "DataObjectReference":
-                start = id_bpmn
-                subTask = re.search(r'subTask="([^"]+)"', line).group(1)
-                element = BPMNDataObjectReference(name, id_bpmn, bpmn_type, subTask)
-
-            elif element_type == "DataStoreReference":
-                start = id_bpmn
-                subTask = re.search(r'subTask="([^"]+)"', line).group(1)
-                element = BPMNDataStoreReference(name, id_bpmn, bpmn_type, subTask)
-
             elif element_type == "EndEvent":
                 subTask = re.search(r'subTask="([^"]*)"', line).group(1) or None
                 element = BPMNEndEvent(name, id_bpmn, bpmn_type, subTask)
-
-            elif element_type == "MessageEndEvent":
-                subTask = re.search(r'subTask="([^"]*)"', line).group(1) or None
-                element = BPMNMessageEndEvent(name, id_bpmn, bpmn_type, subTask)
-
-            elif element_type == "EscalationEndEvent":
-                subTask = re.search(r'subTask="([^"]*)"', line).group(1) or None
-                element = BPMNEscalationEndEvent(name, id_bpmn, bpmn_type, subTask)
-
-            elif element_type == "ErrorEndEvent":
-                subTask = re.search(r'subTask="([^"]*)"', line).group(1) or None
-                element = BPMNErrorEndEvent(name, id_bpmn, bpmn_type, subTask)
-
-            elif element_type == "CompensationEndEvent":
-                subTask = re.search(r'subTask="([^"]*)"', line).group(1) or None
-                element = BPMNCompensationEndEvent(name, id_bpmn, bpmn_type, subTask)
-
-            elif element_type == "SignalEndEvent":
-                subTask = re.search(r'subTask="([^"]*)"', line).group(1) or None
-                element = BPMNSignalEndEvent(name, id_bpmn, bpmn_type, subTask)
-
-            elif element_type == "TerminateEndEvent":
-                subTask = re.search(r'subTask="([^"]*)"', line).group(1) or None
-                element = BPMNTerminateEndEvent(name, id_bpmn, bpmn_type, subTask)
 
             elements[element.id_bpmn] = element
 

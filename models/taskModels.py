@@ -20,21 +20,23 @@ class BPMNUserTask(BPMNElement):
         self.subTask = subTask
 
 class BPMNSendTask(BPMNElement):
-    def __init__(self, name: str, id_bpmn: str, bpmn_type: str, userTask: List[str], numberOfExecutions: int, minimumTime: int, maximumTime: int, subTask: BPMNElement):
+    def __init__(self, name: str, id_bpmn: str, bpmn_type: str, userTask: List[str], numberOfExecutions: int, minimumTime: int, maximumTime: int, messageDestiny: str, subTask: BPMNElement):
         super().__init__(name, id_bpmn, bpmn_type)
         self.userTask = userTask
         self.numberOfExecutions = numberOfExecutions
         self.minimumTime = minimumTime
         self.maximumTime = maximumTime
+        self.messageDestiny = messageDestiny
         self.subTask = subTask
 
 class BPMNRecieveTask(BPMNElement):
-    def __init__(self, name: str, id_bpmn: str, bpmn_type: str, userTask: List[str], numberOfExecutions: int, minimumTime: int, maximumTime: int, subTask: BPMNElement):
+    def __init__(self, name: str, id_bpmn: str, bpmn_type: str, userTask: List[str], numberOfExecutions: int, minimumTime: int, maximumTime: int, messageOrigin: str, subTask: BPMNElement):
         super().__init__(name, id_bpmn, bpmn_type)
         self.userTask = userTask
         self.numberOfExecutions = numberOfExecutions
         self.minimumTime = minimumTime
         self.maximumTime = maximumTime
+        self.messageOrigin = messageOrigin
         self.subTask = subTask
 
 class BPMNManualTask(BPMNElement):
