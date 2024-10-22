@@ -144,32 +144,29 @@ def parse_bpmn_elements(file_content: str):
                 element = BPMNServiceTask(name, id_bpmn, bpmn_type, sodSecurity, bodSecurity, uocSecurity, nu, mth, subTask)
 
             elif element_type == "IntermediateThrowEvent":
-                start = id_bpmn
                 subTask = re.search(r'subTask="([^"]+)"', line).group(1)
                 element = BPMNIntermediateThrowEvent(name, id_bpmn, bpmn_type, subTask)
 
             elif element_type == "MessageIntermediateCatchEvent":
-                start = id_bpmn
+                messageOrigin = re.search(r'messageOrigin=([^\s,]+)', line).group(1)
                 subTask = re.search(r'subTask="([^"]+)"', line).group(1)
-                element = BPMNMessageIntermediateCatchEvent(name, id_bpmn, bpmn_type, subTask)
+                element = BPMNMessageIntermediateCatchEvent(name, id_bpmn, bpmn_type, messageOrigin, subTask)
 
             elif element_type == "MessageIntermediateThrowEvent":
-                start = id_bpmn
                 subTask = re.search(r'subTask="([^"]+)"', line).group(1)
-                element = BPMNMessageIntermediateThrowEvent(name, id_bpmn, bpmn_type, subTask)
+                messageDestiny = re.search(r'messageDestiny=([^\s,]+)', line).group(1)
+                element = BPMNMessageIntermediateThrowEvent(name, id_bpmn, bpmn_type, messageDestiny, subTask)
 
             elif element_type == "TimerIntermediateCatchEvent":
-                start = id_bpmn
+                time = int(re.search(r'time=(\d+)', line).group(1))
                 subTask = re.search(r'subTask="([^"]+)"', line).group(1)
-                element = BPMNTimerIntermediateCatchEvent(name, id_bpmn, bpmn_type, subTask)
+                element = BPMNTimerIntermediateCatchEvent(name, id_bpmn, bpmn_type, time, subTask)
 
             elif element_type == "SubProcess":
-                start = id_bpmn
                 subTask = re.search(r'subTask="([^"]+)"', line).group(1)
                 element = BPMNSubProcess(name, id_bpmn, bpmn_type, subTask)
 
             elif element_type == "Transaction":
-                start = id_bpmn
                 subTask = re.search(r'subTask="([^"]+)"', line).group(1)
                 element = BPMNTransaction(name, id_bpmn, bpmn_type, subTask)
 

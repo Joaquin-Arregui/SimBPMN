@@ -275,6 +275,66 @@ def {element.id_bpmn}(env, name, is_priority):
 """
     return generateFunction(elements, element.subTask, script + functionStr)
 
+def intermediateThrowEvent(elements, element, script):
+    functionStr = f"""
+def {element.id_bpmn}(env, name, is_priority):
+    with open('files/results_{next(iter(elements))}.txt', 'a') as f:
+        f.write(f'''
+{{name}}: [type={element.bpmn_type}, name={element.name}, id_bpmn={element.id_bpmn}, subTask="{element.subTask}", startTime={{env.now}}]''')
+    yield env.timeout(0)
+    return '{element.subTask}'
+    """
+    return generateFunction(elements, element.subTask, script + functionStr)
+
+def messageIntermediateCatchEvent(elements, element, script):
+    functionStr = f"""
+def {element.id_bpmn}(env, name, is_priority):
+    TaskName = '{element.id_bpmn}'
+    if ('{element.messageOrigin}', TaskName, name) not in message_events:
+        message_events[('{element.messageOrigin}', TaskName, name)] = env.event()
+    start_standby_message = env.now
+    yield message_events[('{element.messageOrigin}', TaskName, name)]
+    end_standby_message = env.now
+    duration_standby_message = end_standby_message - start_standby_message
+    if duration_standby_message > 0:
+        with open('files/results_{next(iter(elements))}.txt', 'a') as f:
+            f.write(f'''
+{{name}}: [type=StandByMessage, id_bpmn={{TaskName}}, startTime={{start_standby_message}}, stopTime={{end_standby_message}}, time={{duration_standby_message}}]''')
+    with open('files/results_{next(iter(elements))}.txt', 'a') as f:
+        f.write(f'''
+{{name}}: [type={element.bpmn_type}, name={element.name}, id_bpmn={element.id_bpmn}, subTask="{element.subTask}", startTime={{env.now}}]''')
+    yield env.timeout(0)
+    return '{element.subTask}'
+    """
+    return generateFunction(elements, element.subTask, script + functionStr)
+
+def messageIntermediateThrowEvent(elements, element, script):
+    functionStr = f"""
+def {element.id_bpmn}(env, name, is_priority):
+    TaskName = '{element.id_bpmn}'
+    with open('files/results_{next(iter(elements))}.txt', 'a') as f:
+        f.write(f'''
+{{name}}: [type={element.bpmn_type}, name={element.name}, id_bpmn={element.id_bpmn}, subTask="{element.subTask}", startTime={{env.now}}]''')
+    yield env.timeout(0)
+    if (TaskName, '{element.messageDestiny}', name) not in message_events:
+        message_events[(TaskName, '{element.messageDestiny}', name)] = env.event()
+    message_events[(TaskName, '{element.messageDestiny}', name)].succeed()
+    message_events[(TaskName, '{element.messageDestiny}', name)] = env.event()
+    return '{element.subTask}'
+    """
+    return generateFunction(elements, element.subTask, script + functionStr)
+
+def timerIntermediateCatchEvent(elements, element, script):
+    functionStr = f"""
+def {element.id_bpmn}(env, name, is_priority):
+    with open('files/results_{next(iter(elements))}.txt', 'a') as f:
+        f.write(f'''
+{{name}}: [type={element.bpmn_type}, name={element.name}, id_bpmn={element.id_bpmn}, time={element.time}, subTask="{element.subTask}", startTime={{env.now}}]''')
+    yield env.timeout({element.time})
+    return '{element.subTask}'
+    """
+    return generateFunction(elements, element.subTask, script + functionStr)
+
 def endEvent(elements, element, script):
     functionStr = f"""
 def {element.id_bpmn}(env, name, is_priority):
@@ -290,16 +350,24 @@ def generateFunction(elements, elementId, script):
     elementType = type(element).__name__
     if elementType == "BPMNExclusiveGateway":
         return exclusiveGateway(elements, element, script)
-    elif elementType in ["BPMNTask", "BPMNUserTask", "", "BPMNManualTask", "BPMNBusinessRuleTask", "BPMNScriptTask", "BPMNCallActivity"]:
-        return generalTask(elements, element, script)
-    if elementType == "BPMNSendTask":
-        return sendTask(elements, element, script)
-    if elementType == "BPMNRecieveTask":
-        return recieveTask(elements, element, script)
     elif elementType == "BPMNParallelGateway":
         return parallelGateway(elements, element, script)
     elif elementType == "BPMNInclusiveGateway":
         return inclusiveGateway(elements, element, script)
+    elif elementType in ["BPMNTask", "BPMNUserTask", "", "BPMNManualTask", "BPMNBusinessRuleTask", "BPMNScriptTask", "BPMNCallActivity"]:
+        return generalTask(elements, element, script)
+    elif elementType == "BPMNSendTask":
+        return sendTask(elements, element, script)
+    elif elementType == "BPMNRecieveTask":
+        return recieveTask(elements, element, script)
+    elif elementType == "BPMNIntermediateThrowEvent":
+        return intermediateThrowEvent(elements, element, script)
+    elif elementType == "BPMNMessageIntermediateCatchEvent":
+        return messageIntermediateCatchEvent(elements, element, script)
+    elif elementType == "BPMNMessageIntermediateThrowEvent":
+        return messageIntermediateThrowEvent(elements, element, script)
+    elif elementType == "BPMNTimerIntermediateCatchEvent":
+        return timerIntermediateCatchEvent(elements, element, script)
     elif elementType == "BPMNEndEvent":
         return endEvent(elements, element, script)
 
