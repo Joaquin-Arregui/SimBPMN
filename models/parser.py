@@ -9,6 +9,7 @@ from models.intermediateEventModels import BPMNIntermediateThrowEvent, BPMNMessa
 from models.subprocessModels import BPMNSubProcess, BPMNTransaction
 
 def parse_bpmn_elements(file_content: str):
+    serviceTask = False
     elements = {}
     element_pattern = re.compile(r'Element: \[type=(?P<type>[a-zA-Z:]+), name=(?P<name>[^,]+), id_bpmn=(?P<id_bpmn>[^,]+)(?:, (.*))?\]')
 
@@ -135,6 +136,7 @@ def parse_bpmn_elements(file_content: str):
                 element = BPMNCallActivity(name, id_bpmn, bpmn_type, userTask, numberOfExecutions, minimumTime, maximumTime, subTask)
 
             elif element_type == "ServiceTask":
+                serviceTask = True
                 sodSecurity = re.search(r'sodSecurity=(\w+)', line).group(1) == "true"
                 bodSecurity = re.search(r'bodSecurity=(\w+)', line).group(1) == "true"
                 uocSecurity = re.search(r'uocSecurity=(\w+)', line).group(1) == "true"
@@ -176,4 +178,4 @@ def parse_bpmn_elements(file_content: str):
 
             elements[element.id_bpmn] = element
 
-    return elements, process, start
+    return elements, process, start, serviceTask

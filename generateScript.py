@@ -22,12 +22,12 @@ def {element.id_bpmn}(env, name, is_priority):
     """
     extendedScript = script + functionStr
     for elem in possibleElements:
-        if elem not in script:
+        if ('def ' + elem + '(env, name, is_priority)') not in script:
             extendedScript = generateFunction(elements, elem, extendedScript)
     return extendedScript
 
 def parallelGateway(elements, element, script):
-    possibleElements, _ = getPercentOfBranches(elements, element.id_bpmn)
+    possibleElements = element.subTask
     functionStr = f"""
 def {element.id_bpmn}(env, name, is_priority):
     strSelectedElements = ", ".join({possibleElements})
@@ -39,7 +39,7 @@ def {element.id_bpmn}(env, name, is_priority):
     """
     extendedScript = script + functionStr
     for elem in possibleElements:
-        if elem not in script:
+        if ('def ' + elem + '(env, name, is_priority)') not in script:
             extendedScript = generateFunction(elements, elem, extendedScript)
     return extendedScript
 
@@ -61,8 +61,39 @@ def {element.id_bpmn}(env, name, is_priority):
     """
     extendedScript = script + functionStr
     for elem in possibleElements:
-        if elem not in script:
+        if ('def ' + elem + '(env, name, is_priority)') not in script:
             extendedScript = generateFunction(elements, elem, extendedScript)
+    return extendedScript
+
+def eventBasedGateway(elements, element, script): 
+    possibleElements = element.subTask
+    functionStr = f"""
+def {element.id_bpmn}(env, name, is_priority):
+    event_completions = []
+    event_processes = []
+    for elem in {possibleElements}:
+        completion_event = env.event()
+        event_proc = env.process(globals()[elem](env, name, is_priority, completion_event))
+        event_processes.append(event_proc)
+        event_completions.append(completion_event)
+    result = yield simpy.AnyOf(env, event_completions)
+    for i, event in enumerate(event_completions):
+        if event in result.events:
+            next_task = event.value
+            selected_event = {possibleElements}[i]
+            with open('files/results_Process_10.txt', 'a') as f:
+                f.write(f'''
+{{name}}: [type={element.bpmn_type}, name={element.name}, id_bpmn={element.id_bpmn}, subTask="{{selected_event}}", startTime={{env.now}}]''')
+            for j, proc in enumerate(event_processes):
+                if j != i:
+                    proc.interrupt()
+            break
+    return next_task
+    """
+    extendedScript = script + functionStr
+    for elem in possibleElements:
+        if ('def ' + elem + '(env, name, is_priority') not in script:
+            extendedScript = generateFunction(elements, elem, extendedScript, event_based=True)
     return extendedScript
 
 def generalTask(elements, element, script):
@@ -286,8 +317,31 @@ def {element.id_bpmn}(env, name, is_priority):
     """
     return generateFunction(elements, element.subTask, script + functionStr)
 
-def messageIntermediateCatchEvent(elements, element, script):
-    functionStr = f"""
+def messageIntermediateCatchEvent(elements, element, script, event_based):
+    if event_based:
+        functionStr = f"""
+def {element.id_bpmn}(env, name, is_priority, completion_event):
+    TaskName = '{element.id_bpmn}'
+    if ('{element.messageOrigin}', TaskName, name) not in message_events:
+        message_events[('{element.messageOrigin}', TaskName, name)] = env.event()
+    start_standby_message = env.now
+    try:
+        yield message_events[('{element.messageOrigin}', TaskName, name)]
+        end_standby_message = env.now
+        duration_standby_message = end_standby_message - start_standby_message
+        if duration_standby_message > 0:
+            with open('files/results_{next(iter(elements))}.txt', 'a') as f:
+                f.write(f'''
+{{name}}: [type=StandByMessage, id_bpmn={{TaskName}}, startTime={{start_standby_message}}, stopTime={{end_standby_message}}, time={{duration_standby_message}}]''')
+        completion_event.succeed('{element.subTask}')
+        with open('files/results_{next(iter(elements))}.txt', 'a') as f:
+            f.write(f'''
+{{name}}: [type={element.bpmn_type}, name={element.name}, id_bpmn={element.id_bpmn}, subTask="{element.subTask}", startTime={{env.now}}]''')
+    except simpy.Interrupt:
+        pass
+"""
+    else:
+        functionStr = f"""
 def {element.id_bpmn}(env, name, is_priority):
     TaskName = '{element.id_bpmn}'
     if ('{element.messageOrigin}', TaskName, name) not in message_events:
@@ -303,9 +357,8 @@ def {element.id_bpmn}(env, name, is_priority):
     with open('files/results_{next(iter(elements))}.txt', 'a') as f:
         f.write(f'''
 {{name}}: [type={element.bpmn_type}, name={element.name}, id_bpmn={element.id_bpmn}, subTask="{element.subTask}", startTime={{env.now}}]''')
-    yield env.timeout(0)
     return '{element.subTask}'
-    """
+"""
     return generateFunction(elements, element.subTask, script + functionStr)
 
 def messageIntermediateThrowEvent(elements, element, script):
@@ -324,15 +377,28 @@ def {element.id_bpmn}(env, name, is_priority):
     """
     return generateFunction(elements, element.subTask, script + functionStr)
 
-def timerIntermediateCatchEvent(elements, element, script):
-    functionStr = f"""
+def timerIntermediateCatchEvent(elements, element, script, event_based):
+    if event_based:
+        functionStr = f"""
+def {element.id_bpmn}(env, name, is_priority, completion_event):
+    try:
+        yield env.timeout({element.time})
+        completion_event.succeed('{element.subTask}')
+        with open('files/results_{next(iter(elements))}.txt', 'a') as f:
+            f.write(f'''
+{{name}}: [type={element.bpmn_type}, name={element.name}, id_bpmn={element.id_bpmn}, time={element.time}, subTask="{element.subTask}", startTime={{env.now}}]''')
+    except simpy.Interrupt:
+        pass
+    """
+    else:
+        functionStr = f"""
 def {element.id_bpmn}(env, name, is_priority):
     with open('files/results_{next(iter(elements))}.txt', 'a') as f:
         f.write(f'''
 {{name}}: [type={element.bpmn_type}, name={element.name}, id_bpmn={element.id_bpmn}, time={element.time}, subTask="{element.subTask}", startTime={{env.now}}]''')
     yield env.timeout({element.time})
     return '{element.subTask}'
-    """
+"""
     return generateFunction(elements, element.subTask, script + functionStr)
 
 def endEvent(elements, element, script):
@@ -345,7 +411,7 @@ def {element.id_bpmn}(env, name, is_priority):
     """
     return script + functionStr
 
-def generateFunction(elements, elementId, script):
+def generateFunction(elements, elementId, script, event_based=False):
     element = elements[elementId]
     elementType = type(element).__name__
     if elementType == "BPMNExclusiveGateway":
@@ -354,6 +420,8 @@ def generateFunction(elements, elementId, script):
         return parallelGateway(elements, element, script)
     elif elementType == "BPMNInclusiveGateway":
         return inclusiveGateway(elements, element, script)
+    elif elementType == "BPMNEventBasedGateway":
+        return eventBasedGateway(elements, element, script)
     elif elementType in ["BPMNTask", "BPMNUserTask", "", "BPMNManualTask", "BPMNBusinessRuleTask", "BPMNScriptTask", "BPMNCallActivity"]:
         return generalTask(elements, element, script)
     elif elementType == "BPMNSendTask":
@@ -363,11 +431,11 @@ def generateFunction(elements, elementId, script):
     elif elementType == "BPMNIntermediateThrowEvent":
         return intermediateThrowEvent(elements, element, script)
     elif elementType == "BPMNMessageIntermediateCatchEvent":
-        return messageIntermediateCatchEvent(elements, element, script)
+        return messageIntermediateCatchEvent(elements, element, script, event_based)
     elif elementType == "BPMNMessageIntermediateThrowEvent":
         return messageIntermediateThrowEvent(elements, element, script)
     elif elementType == "BPMNTimerIntermediateCatchEvent":
-        return timerIntermediateCatchEvent(elements, element, script)
+        return timerIntermediateCatchEvent(elements, element, script, event_based)
     elif elementType == "BPMNEndEvent":
         return endEvent(elements, element, script)
 
@@ -411,7 +479,7 @@ def checkServiceTasks(name):
     return script
 
 def generateScript(content):
-    elements, process, start = parse_bpmn_elements(content)
+    elements, process, start, isServiceTask = parse_bpmn_elements(content)
     elementProcess = elements[process]
     script = f"""
 import simpy
@@ -459,7 +527,10 @@ def resolve_possible_users(possibleUsers):
 """
     startEvent = elements[start]
     script = generateFunction(elements, startEvent.subTask, script)
-    scriptServiceTask = serviceTask(elements)
+    if serviceTask:
+        scriptServiceTask = serviceTask(elements)
+    else:
+        scriptServiceTask = ''
     scriptMainFunction = f"""
 def process_task(env, name, task_name, is_priority):
     task_func = globals()[task_name]
