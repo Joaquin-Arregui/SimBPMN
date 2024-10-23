@@ -11,6 +11,7 @@ from models.subprocessModels import BPMNSubProcess, BPMNTransaction
 def parse_bpmn_elements(file_content: str):
     serviceTask = False
     elements = {}
+    start = []
     element_pattern = re.compile(r'Element: \[type=(?P<type>[a-zA-Z:]+), name=(?P<name>[^,]+), id_bpmn=(?P<id_bpmn>[^,]+)(?:, (.*))?\]')
 
     for line in file_content.splitlines():
@@ -49,7 +50,7 @@ def parse_bpmn_elements(file_content: str):
                 element = BPMNSequenceFlow(name, id_bpmn, bpmn_type, superElement, subElement, percentage)
 
             elif element_type == "StartEvent":
-                start = id_bpmn
+                start.append(id_bpmn)
                 subTask = re.search(r'subTask="([^"]+)"', line).group(1)
                 element = BPMNStartEvent(name, id_bpmn, bpmn_type, subTask)
 
