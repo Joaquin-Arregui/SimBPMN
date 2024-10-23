@@ -479,7 +479,7 @@ def checkServiceTasks(name):
     return script
 
 def generateScript(content):
-    elements, process, start, isServiceTask = parse_bpmn_elements(content)
+    elements, process, starts, isServiceTask = parse_bpmn_elements(content)
     elementProcess = elements[process]
     script = f"""
 import simpy
@@ -498,7 +498,7 @@ priority_instance_indices = random.sample(range(nInstances), num_priority_instan
 user_resources = {{}}
 message_events = {{}}
 
-def resolve_task_time(task_name, min_time, max_time, executions, user):
+def resolve_task_time(task_name, max_time, min_time, executions, user):
     if user not in user_task_count:
         user_task_count[user] = {{}}
     if task_name not in user_task_count[user]:
@@ -506,7 +506,7 @@ def resolve_task_time(task_name, min_time, max_time, executions, user):
 
     mu = (min_time+max_time)/2
     sigma = (max_time-min_time)/6
-    time = sum(int(max(min_time, min(random.gauss(mu,sigma), max_time))) for _ in range(executions))
+    time = sum(max(min_time, min(random.gauss(mu,sigma), max_time)) for _ in range(executions))
     reduction_factor = 1 - min(0.05 * user_task_count[user][task_name], 0.5)
 
     user_task_count[user][task_name] += 1
@@ -525,9 +525,12 @@ def resolve_possible_users(possibleUsers):
     return users_direct, users_roles
 
 """
-    startEvent = elements[start]
-    script = generateFunction(elements, startEvent.subTask, script)
-    if serviceTask:
+    startElements = {}
+    for start in starts:
+        startEvent = elements[start]
+        startElements[start] = [startEvent.bpmn_type, startEvent.name, startEvent.id_bpmn, startEvent.subTask]
+        script = generateFunction(elements, startEvent.subTask, script)
+    if isServiceTask:
         scriptServiceTask = serviceTask(elements)
     else:
         scriptServiceTask = ''
@@ -542,36 +545,38 @@ def process_task(env, name, task_name, is_priority):
         else:
             env.process(process_task(env, name, result, is_priority))
 
-def start_process(env, name, is_priority):
-    yield env.process(process_task(env, name, '{startEvent.subTask}', is_priority))
+def start_process(env, name, nextTask, is_priority):
+    yield env.process(process_task(env, name, nextTask, is_priority))
 
 def main(env):
+    startEvents = {startElements}
     global user_resources
     user_resources = {{user: simpy.PriorityResource(env, capacity=1) for user in userPool}}
     with open('files/results_{next(iter(elements))}.txt', 'a') as f:
         f.write(f"Element: [type={elementProcess.bpmn_type}, name={elementProcess.name}, id_bpmn={elementProcess.id_bpmn}, instances={{nInstances}}, frequency={{frequency}}, userWithoutRole={{userWithoutRole}}, userWithRole={{rolePool}}]")
     for i in range(nInstances):
-        is_priority = i in priority_instance_indices
-        if is_priority:
-            with open('files/results_{next(iter(elements))}.txt', 'a') as f:
-                f.write(f'''
-Priority Instance {{i + 1}}: [type={startEvent.bpmn_type}, name={startEvent.name}, id_bpmn={startEvent.id_bpmn}, subTask="{startEvent.subTask}", startTime={{env.now}}]''')
-            env.process(start_process(env, f'Priority Instance {{i + 1}}', is_priority))
-            yield env.timeout(frequency)
-        else:
-            with open('files/results_{next(iter(elements))}.txt', 'a') as f:
-                f.write(f'''
-Instance {{i + 1}}: [type={startEvent.bpmn_type}, name={startEvent.name}, id_bpmn={startEvent.id_bpmn}, subTask="{startEvent.subTask}", startTime={{env.now}}]''')
-            env.process(start_process(env, f'Instance {{i + 1}}', is_priority))
-            yield env.timeout(frequency)
+        for start in {starts}:
+            is_priority = i in priority_instance_indices
+            if is_priority:
+                with open('files/results_{next(iter(elements))}.txt', 'a') as f:
+                    f.write(f'''
+Priority Instance {{i + 1}}: [type={{startEvents[start][0]}}, name={{startEvents[start][1]}}, id_bpmn={{startEvents[start][2]}}, subTask="{{startEvents[start][3]}}", startTime={{env.now}}]''')
+                env.process(start_process(env, f'Priority Instance {{i + 1}}', startEvents[start][3], is_priority))
+            else:
+                with open('files/results_{next(iter(elements))}.txt', 'a') as f:
+                    f.write(f'''
+Instance {{i + 1}}: [type={{startEvents[start][0]}}, name={{startEvents[start][1]}}, id_bpmn={{startEvents[start][2]}}, subTask="{{startEvents[start][3]}}", startTime={{env.now}}]''')
+                env.process(start_process(env, f'Instance {{i + 1}}', startEvents[start][3], is_priority))
+        yield env.timeout(frequency)
 
 env = simpy.Environment()
 env.process(main(env))
-env.run()
+env.run()"""
+    if isServiceTask:
+        scriptMainFunction += f"""
 for i in range(nInstances):
     if i in priority_instance_indices:
         checkServiceTasks(f'Priority Instance {{i + 1}}')
     else:
-        checkServiceTasks(f'Instance {{i + 1}}')
-"""
+        checkServiceTasks(f'Instance {{i + 1}}')"""
     return script + scriptServiceTask + scriptMainFunction, process
