@@ -100,60 +100,77 @@ def generalTask(elements, element, script):
     functionStr = f"""
 def {element.id_bpmn}(env, name, is_priority):
     TaskName = '{element.id_bpmn}'
+    nUser = userPerTask[TaskName] if TaskName in userPerTask.keys() else 1
     possibleUsers = {element.userTask}
     if possibleUsers is None:
         possibleUsers = userPool
     users_direct, users_roles = resolve_possible_users(possibleUsers)
     instance_priority = 0 if is_priority else 1
     available_users_direct = [user for user in users_direct if user_resources[user].count < user_resources[user].capacity]
-    if available_users_direct:
-        userTask = min(available_users_direct, key=lambda u: user_assignments[u])
-        user_assignments[userTask] += 1
-        with user_resources[userTask].request(priority=instance_priority) as req:
-            yield req
-            time = resolve_task_time('{element.id_bpmn}', {element.maximumTime}, {element.minimumTime}, {element.numberOfExecutions}, userTask)
-            with open('files/results_{next(iter(elements))}.txt', 'a') as f:
+    if len(available_users_direct) >= nUser:
+        userTask = sorted(available_users_direct, key=lambda u: user_assignments[u])[:nUser]
+        for user in userTask:
+            user_assignments[user] += 1
+        requests = [user_resources[user].request(priority=instance_priority) for user in userTask]
+        yield env.all_of(requests)
+        try:
+            time = resolve_task_time('Activity_1', 300, 100, 2, userTask)
+            with open('files/results_Process_11.txt', 'a') as f:
                 f.write(f'''
 {{name}}: [type={element.bpmn_type}, name={element.name}, id_bpmn={{TaskName}}, userTask={{userTask}}, numberOfExecutions={element.numberOfExecutions}, time={{time}}, subTask="{element.subTask}", startTime={{env.now}}]''')
             yield env.timeout(time)
+        finally:
+            for i, user in enumerate(userTask):
+                user_resources[user].release(requests[i])
     else:
-        available_users_roles = [user for user in users_roles if user_resources[user].count < user_resources[user].capacity]
-        if available_users_roles:
-            userTask = min(available_users_roles, key=lambda u: user_assignments[u])
-            user_assignments[userTask] += 1
-            with user_resources[userTask].request(priority=instance_priority) as req:
-                yield req
+        available_users_roles = [user for user in list(set(users_roles+users_direct)) if user_resources[user].count < user_resources[user].capacity]
+        if len(available_users_roles) >= nUser:
+            userTask = sorted(available_users_roles, key=lambda u: user_assignments[u])[:nUser]
+            for user in userTask:
+                user_assignments[user] += 1
+            requests = [user_resources[user].request(priority=instance_priority) for user in userTask]
+            yield env.all_of(requests)
+            try:
                 time = resolve_task_time('{element.id_bpmn}', {element.maximumTime}, {element.minimumTime}, {element.numberOfExecutions}, userTask)
-                with open('files/results_{next(iter(elements))}.txt', 'a') as f:
+                with open('files/results_Process_11.txt', 'a') as f:
                     f.write(f'''
 {{name}}: [type={element.bpmn_type}, name={element.name}, id_bpmn={{TaskName}}, userTask={{userTask}}, numberOfExecutions={element.numberOfExecutions}, time={{time}}, subTask="{element.subTask}", startTime={{env.now}}]''')
                 yield env.timeout(time)
+            finally:
+                for i, user in enumerate(userTask):
+                    user_resources[user].release(requests[i])
         else:
             time_standby_start = env.now
-            requests_direct = {{user: user_resources[user].request(priority=instance_priority) for user in users_direct}}
-            requests_roles = {{user: user_resources[user].request(priority=instance_priority) for user in users_roles}}
-            all_requests = list(requests_direct.values()) + list(requests_roles.values())
-            result = yield simpy.AnyOf(env, all_requests)
-            userTask = None
-            req = None
-            for user, request in {{**requests_roles, **requests_direct}}.items():
-                if request in result.events:
-                    userTask = user
-                    req = request
-                    user_assignments[userTask] += 1
-                else:
-                    request.cancel()
+            requests = {{user: user_resources[user].request(priority=instance_priority) for user in list(set(users_direct + users_roles))}}
+            pending_requests = list(requests.values())
+            userTask = []
+            while len(userTask) < nUser:
+                result = yield env.any_of(pending_requests)
+                for req_event in result.events:
+                    for user, req in requests.items():
+                        if req == req_event and user not in userTask:
+                            userTask.append(user)
+                            pending_requests.remove(req)
+                            break
+            for user in userTask:
+                user_assignments[user] += 1
             standby_end_time = env.now
             standby_duration = standby_end_time - time_standby_start
             with open('files/results_{next(iter(elements))}.txt', 'a') as f:
                 f.write(f'''
 {{name}}: [type=StandBy, id_bpmn={{TaskName}}, startTime={{time_standby_start}}, stopTime={{standby_end_time}}, time={{standby_duration}}]''')
-            time = resolve_task_time('{element.id_bpmn}', {element.maximumTime}, {element.minimumTime}, {element.numberOfExecutions}, userTask)
-            with open('files/results_{next(iter(elements))}.txt', 'a') as f:
-                f.write(f'''
+            try:
+                time = resolve_task_time('{element.id_bpmn}', {element.maximumTime}, {element.minimumTime}, {element.numberOfExecutions}, userTask)
+                with open('files/results_Process_11.txt', 'a') as f:
+                    f.write(f'''
 {{name}}: [type={element.bpmn_type}, name={element.name}, id_bpmn={{TaskName}}, userTask={{userTask}}, numberOfExecutions={element.numberOfExecutions}, time={{time}}, subTask="{element.subTask}", startTime={{env.now}}]''')
-            yield env.timeout(time)
-            user_resources[userTask].release(req)
+                yield env.timeout(time)
+            finally:
+                for user in userTask:
+                    user_resources[user].release(requests[user])
+                for user, req in requests.items():
+                    if user not in userTask:
+                        req.cancel()
     return '{element.subTask}'
 """
     return generateFunction(elements, element.subTask, script + functionStr)
@@ -163,19 +180,22 @@ def sendTask(elements, element, script):
     functionStr = f"""
 def {element.id_bpmn}(env, name, is_priority):
     TaskName = '{element.id_bpmn}'
+    nUser = userPerTask[TaskName] if TaskName in userPerTask.keys() else 1
     possibleUsers = {element.userTask}
     if possibleUsers is None:
         possibleUsers = userPool
     users_direct, users_roles = resolve_possible_users(possibleUsers)
     instance_priority = 0 if is_priority else 1
     available_users_direct = [user for user in users_direct if user_resources[user].count < user_resources[user].capacity]
-    if available_users_direct:
-        userTask = min(available_users_direct, key=lambda u: user_assignments[u])
-        user_assignments[userTask] += 1
-        with user_resources[userTask].request(priority=instance_priority) as req:
-            yield req
-            time = resolve_task_time('{element.id_bpmn}', {element.maximumTime}, {element.minimumTime}, {element.numberOfExecutions}, userTask)
-            with open('files/results_{next(iter(elements))}.txt', 'a') as f:
+    if len(available_users_direct) >= nUser:
+        userTask = sorted(available_users_direct, key=lambda u: user_assignments[u])[:nUser]
+        for user in userTask:
+            user_assignments[user] += 1
+        requests = [user_resources[user].request(priority=instance_priority) for user in userTask]
+        yield env.all_of(requests)
+        try:
+            time = resolve_task_time('Activity_1', 300, 100, 2, userTask)
+            with open('files/results_Process_11.txt', 'a') as f:
                 f.write(f'''
 {{name}}: [type={element.bpmn_type}, name={element.name}, id_bpmn={{TaskName}}, userTask={{userTask}}, numberOfExecutions={element.numberOfExecutions}, time={{time}}, subTask="{element.subTask}", startTime={{env.now}}]''')
             yield env.timeout(time)
@@ -183,15 +203,20 @@ def {element.id_bpmn}(env, name, is_priority):
                 message_events[(TaskName, '{element.messageDestiny}', name)] = env.event()
             message_events[(TaskName, '{element.messageDestiny}', name)].succeed()
             message_events[(TaskName, '{element.messageDestiny}', name)] = env.event()
+        finally:
+            for i, user in enumerate(userTask):
+                user_resources[user].release(requests[i])
     else:
-        available_users_roles = [user for user in users_roles if user_resources[user].count < user_resources[user].capacity]
-        if available_users_roles:
-            userTask = min(available_users_roles, key=lambda u: user_assignments[u])
-            user_assignments[userTask] += 1
-            with user_resources[userTask].request(priority=instance_priority) as req:
-                yield req
+        available_users_roles = [user for user in list(set(users_roles+users_direct)) if user_resources[user].count < user_resources[user].capacity]
+        if len(available_users_roles) >= nUser:
+            userTask = sorted(available_users_roles, key=lambda u: user_assignments[u])[:nUser]
+            for user in userTask:
+                user_assignments[user] += 1
+            requests = [user_resources[user].request(priority=instance_priority) for user in userTask]
+            yield env.all_of(requests)
+            try:
                 time = resolve_task_time('{element.id_bpmn}', {element.maximumTime}, {element.minimumTime}, {element.numberOfExecutions}, userTask)
-                with open('files/results_{next(iter(elements))}.txt', 'a') as f:
+                with open('files/results_Process_11.txt', 'a') as f:
                     f.write(f'''
 {{name}}: [type={element.bpmn_type}, name={element.name}, id_bpmn={{TaskName}}, userTask={{userTask}}, numberOfExecutions={element.numberOfExecutions}, time={{time}}, subTask="{element.subTask}", startTime={{env.now}}]''')
                 yield env.timeout(time)
@@ -199,36 +224,45 @@ def {element.id_bpmn}(env, name, is_priority):
                     message_events[(TaskName, '{element.messageDestiny}', name)] = env.event()
                 message_events[(TaskName, '{element.messageDestiny}', name)].succeed()
                 message_events[(TaskName, '{element.messageDestiny}', name)] = env.event()
+            finally:
+                for i, user in enumerate(userTask):
+                    user_resources[user].release(requests[i])
         else:
             time_standby_start = env.now
-            requests_direct = {{user: user_resources[user].request(priority=instance_priority) for user in users_direct}}
-            requests_roles = {{user: user_resources[user].request(priority=instance_priority) for user in users_roles}}
-            all_requests = list(requests_direct.values()) + list(requests_roles.values())
-            result = yield simpy.AnyOf(env, all_requests)
-            userTask = None
-            req = None
-            for user, request in {{**requests_roles, **requests_direct}}.items():
-                if request in result.events:
-                    userTask = user
-                    req = request
-                    user_assignments[userTask] += 1
-                else:
-                    request.cancel()
+            requests = {{user: user_resources[user].request(priority=instance_priority) for user in list(set(users_direct + users_roles))}}
+            pending_requests = list(requests.values())
+            userTask = []
+            while len(userTask) < nUser:
+                result = yield env.any_of(pending_requests)
+                for req_event in result.events:
+                    for user, req in requests.items():
+                        if req == req_event and user not in userTask:
+                            userTask.append(user)
+                            pending_requests.remove(req)
+                            break
+            for user in userTask:
+                user_assignments[user] += 1
             standby_end_time = env.now
             standby_duration = standby_end_time - time_standby_start
             with open('files/results_{next(iter(elements))}.txt', 'a') as f:
                 f.write(f'''
 {{name}}: [type=StandBy, id_bpmn={{TaskName}}, startTime={{time_standby_start}}, stopTime={{standby_end_time}}, time={{standby_duration}}]''')
-            time = resolve_task_time('{element.id_bpmn}', {element.maximumTime}, {element.minimumTime}, {element.numberOfExecutions}, userTask)
-            with open('files/results_{next(iter(elements))}.txt', 'a') as f:
-                f.write(f'''
+            try:
+                time = resolve_task_time('{element.id_bpmn}', {element.maximumTime}, {element.minimumTime}, {element.numberOfExecutions}, userTask)
+                with open('files/results_Process_11.txt', 'a') as f:
+                    f.write(f'''
 {{name}}: [type={element.bpmn_type}, name={element.name}, id_bpmn={{TaskName}}, userTask={{userTask}}, numberOfExecutions={element.numberOfExecutions}, time={{time}}, subTask="{element.subTask}", startTime={{env.now}}]''')
-            yield env.timeout(time)
-            if (TaskName, '{element.messageDestiny}', name) not in message_events:
+                yield env.timeout(time)
+                if (TaskName, '{element.messageDestiny}', name) not in message_events:
+                    message_events[(TaskName, '{element.messageDestiny}', name)] = env.event()
+                message_events[(TaskName, '{element.messageDestiny}', name)].succeed()
                 message_events[(TaskName, '{element.messageDestiny}', name)] = env.event()
-            message_events[(TaskName, '{element.messageDestiny}', name)].succeed()
-            message_events[(TaskName, '{element.messageDestiny}', name)] = env.event()
-            user_resources[userTask].release(req)
+            finally:
+                for user in userTask:
+                    user_resources[user].release(requests[user])
+                for user, req in requests.items():
+                    if user not in userTask:
+                        req.cancel()
     return '{element.subTask}'
 """
     return generateFunction(elements, element.subTask, script + functionStr)
@@ -238,6 +272,7 @@ def recieveTask(elements, element, script):
     functionStr = f"""
 def {element.id_bpmn}(env, name, is_priority):
     TaskName = '{element.id_bpmn}'
+    nUser = userPerTask[TaskName] if TaskName in userPerTask.keys() else 1
     if ('{element.messageOrigin}', TaskName, name) not in message_events:
         message_events[('{element.messageOrigin}', TaskName, name)] = env.event()
     start_standby_message = env.now
@@ -254,54 +289,70 @@ def {element.id_bpmn}(env, name, is_priority):
     users_direct, users_roles = resolve_possible_users(possibleUsers)
     instance_priority = 0 if is_priority else 1
     available_users_direct = [user for user in users_direct if user_resources[user].count < user_resources[user].capacity]
-    if available_users_direct:
-        userTask = min(available_users_direct, key=lambda u: user_assignments[u])
-        user_assignments[userTask] += 1
-        with user_resources[userTask].request(priority=instance_priority) as req:
-            yield req
-            time = resolve_task_time('{element.id_bpmn}', {element.maximumTime}, {element.minimumTime}, {element.numberOfExecutions}, userTask)
-            with open('files/results_{next(iter(elements))}.txt', 'a') as f:
+    if len(available_users_direct) >= nUser:
+        userTask = sorted(available_users_direct, key=lambda u: user_assignments[u])[:nUser]
+        for user in userTask:
+            user_assignments[user] += 1
+        requests = [user_resources[user].request(priority=instance_priority) for user in userTask]
+        yield env.all_of(requests)
+        try:
+            time = resolve_task_time('Activity_1', 300, 100, 2, userTask)
+            with open('files/results_Process_11.txt', 'a') as f:
                 f.write(f'''
 {{name}}: [type={element.bpmn_type}, name={element.name}, id_bpmn={{TaskName}}, userTask={{userTask}}, numberOfExecutions={element.numberOfExecutions}, time={{time}}, subTask="{element.subTask}", startTime={{env.now}}]''')
             yield env.timeout(time)
+        finally:
+            for i, user in enumerate(userTask):
+                user_resources[user].release(requests[i])
     else:
-        available_users_roles = [user for user in users_roles if user_resources[user].count < user_resources[user].capacity]
-        if available_users_roles:
-            userTask = min(available_users_roles, key=lambda u: user_assignments[u])
-            user_assignments[userTask] += 1
-            with user_resources[userTask].request(priority=instance_priority) as req:
-                yield req
+        available_users_roles = [user for user in list(set(users_roles+users_direct)) if user_resources[user].count < user_resources[user].capacity]
+        if len(available_users_roles) >= nUser:
+            userTask = sorted(available_users_roles, key=lambda u: user_assignments[u])[:nUser]
+            for user in userTask:
+                user_assignments[user] += 1
+            requests = [user_resources[user].request(priority=instance_priority) for user in userTask]
+            yield env.all_of(requests)
+            try:
                 time = resolve_task_time('{element.id_bpmn}', {element.maximumTime}, {element.minimumTime}, {element.numberOfExecutions}, userTask)
-                with open('files/results_{next(iter(elements))}.txt', 'a') as f:
+                with open('files/results_Process_11.txt', 'a') as f:
                     f.write(f'''
 {{name}}: [type={element.bpmn_type}, name={element.name}, id_bpmn={{TaskName}}, userTask={{userTask}}, numberOfExecutions={element.numberOfExecutions}, time={{time}}, subTask="{element.subTask}", startTime={{env.now}}]''')
                 yield env.timeout(time)
+            finally:
+                for i, user in enumerate(userTask):
+                    user_resources[user].release(requests[i])
         else:
             time_standby_start = env.now
-            requests_direct = {{user: user_resources[user].request(priority=instance_priority) for user in users_direct}}
-            requests_roles = {{user: user_resources[user].request(priority=instance_priority) for user in users_roles}}
-            all_requests = list(requests_direct.values()) + list(requests_roles.values())
-            result = yield simpy.AnyOf(env, all_requests)
-            userTask = None
-            req = None
-            for user, request in {{**requests_roles, **requests_direct}}.items():
-                if request in result.events:
-                    userTask = user
-                    req = request
-                    user_assignments[userTask] += 1
-                else:
-                    request.cancel()
+            requests = {{user: user_resources[user].request(priority=instance_priority) for user in list(set(users_direct + users_roles))}}
+            pending_requests = list(requests.values())
+            userTask = []
+            while len(userTask) < nUser:
+                result = yield env.any_of(pending_requests)
+                for req_event in result.events:
+                    for user, req in requests.items():
+                        if req == req_event and user not in userTask:
+                            userTask.append(user)
+                            pending_requests.remove(req)
+                            break
+            for user in userTask:
+                user_assignments[user] += 1
             standby_end_time = env.now
             standby_duration = standby_end_time - time_standby_start
             with open('files/results_{next(iter(elements))}.txt', 'a') as f:
                 f.write(f'''
 {{name}}: [type=StandBy, id_bpmn={{TaskName}}, startTime={{time_standby_start}}, stopTime={{standby_end_time}}, time={{standby_duration}}]''')
-            time = resolve_task_time('{element.id_bpmn}', {element.maximumTime}, {element.minimumTime}, {element.numberOfExecutions}, userTask)
-            with open('files/results_{next(iter(elements))}.txt', 'a') as f:
-                f.write(f'''
+            try:
+                time = resolve_task_time('{element.id_bpmn}', {element.maximumTime}, {element.minimumTime}, {element.numberOfExecutions}, userTask)
+                with open('files/results_Process_11.txt', 'a') as f:
+                    f.write(f'''
 {{name}}: [type={element.bpmn_type}, name={element.name}, id_bpmn={{TaskName}}, userTask={{userTask}}, numberOfExecutions={element.numberOfExecutions}, time={{time}}, subTask="{element.subTask}", startTime={{env.now}}]''')
-            yield env.timeout(time)
-            user_resources[userTask].release(req)
+                yield env.timeout(time)
+            finally:
+                for user in userTask:
+                    user_resources[user].release(requests[user])
+                for user, req in requests.items():
+                    if user not in userTask:
+                        req.cancel()
     return '{element.subTask}'
 """
     return generateFunction(elements, element.subTask, script + functionStr)
@@ -491,6 +542,7 @@ rolePool = {elementProcess.userWithRole}
 userWithRole = list(set(value for sublist in rolePool.values() for value in sublist))
 userWithoutRole = {elementProcess.userWithoutRole}
 userPool = userWithRole + userWithoutRole
+userPerTask = {userPerTask}
 user_task_count = {{}}
 user_assignments = {{user: 0 for user in userPool}}
 num_priority_instances = max(1, int(nInstances * 0.1))
@@ -498,18 +550,34 @@ priority_instance_indices = random.sample(range(nInstances), num_priority_instan
 user_resources = {{}}
 message_events = {{}}
 
-def resolve_task_time(task_name, max_time, min_time, executions, user):
-    if user not in user_task_count:
-        user_task_count[user] = {{}}
-    if task_name not in user_task_count[user]:
-        user_task_count[user][task_name] = 0
+def resolve_task_time(task_name, max_time, min_time, executions, users):
+    if isinstance(users, list):
+        for user in users:
+            if user not in user_task_count:
+                user_task_count[user] = {{}}
+            if task_name not in user_task_count[user]:
+                user_task_count[user][task_name] = 0
+    else:
+        if users not in user_task_count:
+            user_task_count[users] = {{}}
+        if task_name not in user_task_count[users]:
+            user_task_count[users][task_name] = 0
 
     mu = (min_time+max_time)/2
     sigma = (max_time-min_time)/6
     time = sum(max(min_time, min(random.gauss(mu,sigma), max_time)) for _ in range(executions))
-    reduction_factor = 1 - min(0.05 * user_task_count[user][task_name], 0.5)
-
-    user_task_count[user][task_name] += 1
+    if isinstance(users, list):
+        experience = 0
+        for user in users:
+            experience += user_task_count[user][task_name]
+        reduction_factor = 1 - min(0.05 * experience/len(users), 0.5)
+    else:
+        reduction_factor = 1 - min(0.05 * user_task_count[user][task_name], 0.5)
+    if isinstance(users, list):
+        for user in users:
+            user_task_count[user][task_name] += 1
+    else:
+        user_task_count[users][task_name] += 1
     return round(time * reduction_factor)
 
 def resolve_possible_users(possibleUsers):

@@ -12,6 +12,6 @@ script_name = f'script_{process}.py'
 with open(script_name, 'x') as f:
     f.write(script)
 
-#subprocess.run(['python', script_name])
+subprocess.run(['python', script_name])
 #os.remove(rulesPath)
-#os.remove(script_name)
+os.remove(script_name)
