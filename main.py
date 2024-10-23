@@ -2,7 +2,7 @@ import subprocess
 import os
 from generateScript import generateScript
 
-rulesPath = 'files/esperTasks.txt'
+rulesPath = 'files/esperTasks10.txt'
 
 with open(rulesPath, 'r') as f:
     file_content = f.read()
@@ -13,5 +13,5 @@ with open(script_name, 'x') as f:
     f.write(script)
 
 subprocess.run(['python', script_name])
-os.remove(rulesPath)
+#os.remove(rulesPath)
 os.remove(script_name)
