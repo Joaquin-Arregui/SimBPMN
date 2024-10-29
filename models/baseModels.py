@@ -7,12 +7,13 @@ class BPMNElement:
         self.bpmn_type = bpmn_type
 
 class BPMNProcess(BPMNElement):
-    def __init__(self, name: str, id_bpmn: str, bpmn_type: str, instances: int, frequency: int, userWithoutRole: List[str], userWithRole: Dict[str, List[str]]):
+    def __init__(self, name: str, id_bpmn: str, bpmn_type: str, instances: int, frequency: int, userWithoutRole: List[str], userWithRole: Dict[str, List[str]], security: bool):
         super().__init__(name, id_bpmn, bpmn_type)
         self.instances = instances
         self.frequency = frequency
         self.userWithoutRole = userWithoutRole
         self.userWithRole = userWithRole
+        self.security = security
 
 class BPMNSequenceFlow(BPMNElement):
     def __init__(self, name: str, id_bpmn: str, bpmn_type: str, superElement: BPMNElement, subElement: BPMNElement, percentageOfBranches: float = None):

@@ -9,9 +9,9 @@ from models.intermediateEventModels import BPMNIntermediateThrowEvent, BPMNMessa
 from models.subprocessModels import BPMNSubProcess, BPMNTransaction
 
 def parse_bpmn_elements(file_content: str):
-    serviceTask = False
     elements = {}
     userPerTask = {}
+    securityTasks = {}
     start = []
     element_pattern = re.compile(r'Element: \[type=(?P<type>[a-zA-Z:]+), name=(?P<name>[^,]+), id_bpmn=(?P<id_bpmn>[^,]+)(?:, (.*))?\]')
 
@@ -40,8 +40,8 @@ def parse_bpmn_elements(file_content: str):
                     userWithRole = ast.literal_eval(userWithRole_str)
                 else:
                     userWithRole = {}
-
-                element = BPMNProcess(name, id_bpmn, bpmn_type, instances, frequency, userWithoutRole, userWithRole)
+                security = re.search(r'security=(\w+)', line).group(1) == "true"
+                element = BPMNProcess(name, id_bpmn, bpmn_type, instances, frequency, userWithoutRole, userWithRole, security)
 
             elif element_type == "SequenceFlow":
                 superElement = re.search(r'superElement="([^"]+)"', line).group(1)
@@ -138,7 +138,6 @@ def parse_bpmn_elements(file_content: str):
                 element = BPMNCallActivity(name, id_bpmn, bpmn_type, userTask, numberOfExecutions, minimumTime, maximumTime, subTask)
 
             elif element_type == "ServiceTask":
-                serviceTask = True
                 sodSecurity = re.search(r'sodSecurity=(\w+)', line).group(1) == "true"
                 bodSecurity = re.search(r'bodSecurity=(\w+)', line).group(1) == "true"
                 uocSecurity = re.search(r'uocSecurity=(\w+)', line).group(1) == "true"
@@ -152,6 +151,10 @@ def parse_bpmn_elements(file_content: str):
                             userPerTask[task] = nu
                     else:
                         userPerTask[task] = nu
+                    if task in securityTasks.keys():
+                        securityTasks[task][id_bpmn] = [sodSecurity, bodSecurity, uocSecurity, mth]
+                    else:
+                        securityTasks[task] = {id_bpmn: [sodSecurity, bodSecurity, uocSecurity, mth]}
 
             elif element_type == "IntermediateThrowEvent":
                 subTask = re.search(r'subTask="([^"]+)"', line).group(1)
@@ -185,5 +188,5 @@ def parse_bpmn_elements(file_content: str):
                 element = BPMNEndEvent(name, id_bpmn, bpmn_type, subTask)
 
             elements[element.id_bpmn] = element
-
+    elements['security'] = securityTasks
     return elements, process, start, userPerTask
