@@ -1,5 +1,5 @@
-/rules/
-/results/
-/__pycache__/
-/models/__pycache__/
-/files/
+/Simulator/__pycache__/
+/Simulator/models/__pycache__/
+/Simulator/heatMap/__pycache__/
+/Diagnosis/.env
+/data/

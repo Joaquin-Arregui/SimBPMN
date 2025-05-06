@@ -1,0 +1,22 @@
+var _path, _rect;
+function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
+import * as React from "react";
+var SvgPauseRemove = function SvgPauseRemove(props) {
+  return /*#__PURE__*/React.createElement("svg", _extends({
+    xmlns: "http://www.w3.org/2000/svg",
+    viewBox: "0 0 580.5 448"
+  }, props), _path || (_path = /*#__PURE__*/React.createElement("path", {
+    fill: "currentColor",
+    d: "M112 0C85 0 64 22 64 48v196l192-89V48c0-26-22-48-48-48zm256 0c-27 0-48 22-48 48v77l190-89c-5-21-24-36-46-36Zm144 105-192 89v70l192-89zM256 224 64 314v70l192-90zm256 21-192 89v66c0 27 21 48 48 48h96c26 0 48-21 48-48zM256 364 89 442c7 4 14 6 23 6h96c26 0 48-21 48-48z"
+  })), _rect || (_rect = /*#__PURE__*/React.createElement("rect", {
+    width: 63.3,
+    height: 618.2,
+    x: 311.5,
+    y: -469.4,
+    fill: "currentColor",
+    rx: 10,
+    transform: "rotate(65)"
+  })));
+};
+export { SvgPauseRemove as ReactComponent };
+export default "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1ODAuNSA0NDgiPgogIDxwYXRoIGZpbGw9ImN1cnJlbnRDb2xvciIgZD0iTTExMiAwQzg1IDAgNjQgMjIgNjQgNDh2MTk2bDE5Mi04OVY0OGMwLTI2LTIyLTQ4LTQ4LTQ4em0yNTYgMGMtMjcgMC00OCAyMi00OCA0OHY3N2wxOTAtODljLTUtMjEtMjQtMzYtNDYtMzZabTE0NCAxMDUtMTkyIDg5djcwbDE5Mi04OXpNMjU2IDIyNCA2NCAzMTR2NzBsMTkyLTkwem0yNTYgMjEtMTkyIDg5djY2YzAgMjcgMjEgNDggNDggNDhoOTZjMjYgMCA0OC0yMSA0OC00OHpNMjU2IDM2NCA4OSA0NDJjNyA0IDE0IDYgMjMgNmg5NmMyNiAwIDQ4LTIxIDQ4LTQ4eiIvPgogIDxyZWN0IGZpbGw9ImN1cnJlbnRDb2xvciIgd2lkdGg9IjYzLjMiIGhlaWdodD0iNjE4LjIiIHg9IjMxMS41IiB5PSItNDY5LjQiIHRyYW5zZm9ybT0icm90YXRlKDY1KSIgcng9IjEwIi8+Cjwvc3ZnPgo=";
