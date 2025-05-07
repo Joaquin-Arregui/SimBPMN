@@ -1,5 +1,7 @@
-/Simulator/__pycache__/
-/Simulator/models/__pycache__/
-/Simulator/heatMap/__pycache__/
-/Diagnosis/.env
+Backend/simulator/__pycache__/
+Backend/simulator/models/__pycache__/
+Backend/simulator/simulationFunctions/__pycache__/
+Backend/heatMap/__pycache__/
+Backend/heatMap/heatMapFunctions/__pycache__/
+Backend/chatbot/.env
 /data/

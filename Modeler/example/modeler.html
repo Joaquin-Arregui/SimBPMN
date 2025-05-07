@@ -34,42 +34,39 @@
   </div>
 
   <div class="links bottom-links">
-    <button class="link active" id="button2" title="Deploy Rules">Deploy Rules</button>
-    <button class="link active" id="js-download-esper" title="Compliance Security Policies">Compliance</button>
-    <button class="link active" id="js-heat-map" title="Generate heat map">Heat Map simulation</button>
-    <button class="link active" id="js-chatbot" title="Open Chat Bot">Chat Bot</button>
+    <button class="link active" id="js-simulate" title="Simulate BPMN model">Simulate</button>
+    <button class="link active" id="js-continue" title="Continue with the last simulation">Last simulation</button>
   </div>
-
   <div class="modal-overlay" style="display: none;">
     <div class="modal">
-      <pre id="modal-content">Modal</pre>
-      <button id="close-modal">Confirm</button>
+      <div class="modal-tabs">
+        <button class="tab-button active" data-tab="tab1">Simulation results</button>
+        <button class="tab-button" data-tab="tab2">Heatmap</button>
+        <button class="tab-button" data-tab="tab3">Chatbot</button>
+      </div>
+      <div class="tab-content active" id="tab1-content">
+        <pre id="modal-content-tab1">Results of the simulation</pre>
+      </div>
+      <div class="tab-content" id="tab2-content">
+        <pre id="modal-content-tab2">Heatmap of the model</pre>
+      </div>
+      <div class="tab-content" id="tab3-content">
+        <select id="chatbot-selector">
+          <option value="gpt">Gpt</option>
+          <option value="llama">LLaMA</option>
+          <option value="deepseek">DeepSeek</option>
+        </select>
+        <div class="chatbot-body" id="modal-content-tab3">
+          
+        </div>
+        <div class="modal-content-tab3-footer">
+          <input type="text" id="chatbot-input" placeholder="Type your message..." />
+          <button id="send-chatbot">Send</button>
+        </div>
+      </div>
+      <button id="close-modal">Close</button>
     </div>
   </div>
-
-  <div class="heatModal-overlay" style="display: none;">
-    <div class="heatModal">
-      <pre id="heatModal-content">Modal</pre>
-      <button id="close-heatModal">Confirm</button>
-    </div>
-  </div>
-  
-  <div class="chatbotModal-overlay" style="display: none;">
-    <div class="chatbotModal">
-      <div class="chatbot-header">
-        <span>Chat Bot</span>
-        <button id="close-chatbotModal">X</button>
-      </div>
-      <div class="chatbot-body">
-        <div id="chatbot-content">Hello, how can I help you?</div>
-      </div>
-      <div class="chatbot-footer">
-        <input type="text" id="chatbot-input" placeholder="Type your message..." />
-        <button id="send-chatbot">Send</button>
-      </div>
-    </div>
-  </div>
-
   <script src="./dist/modeler.js"></script>
 </body>
 </html>

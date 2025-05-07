@@ -30,6 +30,8 @@ import laneExtension from '../../descriptors/lane.json';
 //import participantExtension from '../../descriptors/participant.json';
 import participantWithoutLaneExtension from '../../descriptors/participantWithoutLane.json';
 import AddExporter from '@bpmn-io/add-exporter';
+import MarkdownIt from 'markdown-it';
+import DOMPurify from 'dompurify';
 
 import {
   esperRules,
@@ -159,160 +161,6 @@ $(function() {
   createNewDiagram(modelFile);
   registerFileDrop($('#canvas'), openDiagram);
 
-  function setEncoded(link, name, data) {
-    if (data) {
-      const encodedData = encodeURIComponent(data);
-      link.addClass('active').attr({
-        'href': 'data:application/json;charset=UTF-8,' + encodedData,
-        'download': name
-      });
-    } else {
-      link.removeClass('active');
-    }
-  }
-
-  var downloadLink = $('#js-download-diagram');
-  var downloadSvgLink = $('#js-download-svg');
-
-  let isDownloading = false;
-  let hasDownloaded = false;
-
-$('#js-download-esper').off('click').on('click', async function(e) {
-  e.preventDefault();
-  e.stopPropagation();
-  e.stopImmediatePropagation();
-
-  document.querySelector('.modal-overlay').style.display = 'block';
-  document.querySelector('#modal-content').textContent = 'Processing simulation...';
-
-  try {
-    const content = await exportToEsper(bpmnModeler);
-
-    const response = await fetch('http://localhost:3000/save-esper-file', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ content, filename: 'esperTasks.txt' }),
-    });
-    if (!response.ok) {
-      const errorText = await response.text();
-      console.error('Server error:', errorText);
-      throw new Error(`Error when obtaining violations.txt: ${response.statusText}`);
-    }
-
-    const data = await response.json();
-
-    if (!data.content.trim()) {
-      document.querySelector('#modal-content').textContent = 'No violations found.';
-    } else {
-      document.querySelector('#modal-content').textContent = data.content;
-    }
-    document.querySelector('.modal-overlay').style.display = 'block';
-      
-  } catch (err) {
-      console.error('Error al exportar a Esper:', err);
-  } finally {
-  }
-});
-
-$('#js-heat-map').off('click').on('click', async function(e) {
-  e.preventDefault();
-  e.stopPropagation();
-  e.stopImmediatePropagation();
-
-  document.querySelector('.heatModal-overlay').style.display = 'block';
-  document.querySelector('#heatModal-content').textContent = 'Processing simulation...';
-
-  try {
-      const { xml: diagramXML } = await bpmnModeler.saveXML({format: true});
-      const content = await exportToEsper(bpmnModeler);
-      const saveResponse = await fetch('http://localhost:3000/heat-map', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ content, diagramXML, filename: 'esperTasks.txt', diagramfilename: 'diagram.bpmn' }),
-      });
-      const data = await saveResponse.json();
-      if (data && data.content) {
-        await bpmnModeler.importXML(data.content);
-        const { svg } = await bpmnModeler.saveSVG();
-        await bpmnModeler.importXML(diagramXML);
-        document.querySelector('#heatModal-content').innerHTML = svg;
-        setTimeout(() => {
-          const svgElement = document.querySelector('#heatModal-content svg');
-          if (svgElement) {
-            svgPanZoom(svgElement, {
-              zoomEnabled: true,
-              controlIconsEnabled: true,
-              fit: true,
-              center: true,
-            });
-          }
-        }, 0);
-      } else {
-        console.error('No diagram XML received.');
-      }
-  } catch (err) {
-      console.error('Error al exportar a Esper:', err);
-  } finally {
-  }
-});
-
-$('#js-heat-map').off('click').on('click', async function(e) {
-  e.preventDefault();
-  e.stopPropagation();
-  e.stopImmediatePropagation();
-
-  document.querySelector('.heatModal-overlay').style.display = 'block';
-  document.querySelector('#heatModal-content').textContent = 'Processing simulation...';
-
-  try {
-      const { xml: diagramXML } = await bpmnModeler.saveXML({format: true});
-      const content = await exportToEsper(bpmnModeler);
-      const saveResponse = await fetch('http://localhost:3000/heat-map', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ content, diagramXML, filename: 'esperTasks.txt', diagramfilename: 'diagram.bpmn' }),
-      });
-      const data = await saveResponse.json();
-      if (data && data.content) {
-        await bpmnModeler.importXML(data.content);
-        const { svg } = await bpmnModeler.saveSVG();
-        await bpmnModeler.importXML(diagramXML);
-        document.querySelector('#heatModal-content').innerHTML = svg;
-        setTimeout(() => {
-          const svgElement = document.querySelector('#heatModal-content svg');
-          if (svgElement) {
-            svgPanZoom(svgElement, {
-              zoomEnabled: true,
-              controlIconsEnabled: true,
-              fit: true,
-              center: true,
-            });
-          }
-        }, 0);
-      } else {
-        console.error('No diagram XML received.');
-      }
-  } catch (err) {
-      console.error('Error al exportar a Esper:', err);
-  } finally {
-      console.log('Proceso de guardado completado');
-  }
-});
-
-document.getElementById('close-heatModal').addEventListener('click', function() {
-  document.querySelector('.heatModal-overlay').style.display = 'none';
-});
-
-document.getElementById('close-modal').addEventListener('click', function() {
-  document.querySelector('.modal-overlay').style.display = 'none'; 
-});
-
   function downloadDiagram() {
     bpmnModeler.saveXML({ format: true }).then(({ xml }) => {
       download(xml, 'diagram.bpmn', 'application/xml');
@@ -321,103 +169,12 @@ document.getElementById('close-modal').addEventListener('click', function() {
     });
   }
 
-  function openFile(files) {
-    if (!files.length) return;
-    const file = files[0];
-    const reader = new FileReader();
-
-    reader.onload = function(event) {
-      const xml = event.target.result;
-      openDiagram(xml);
-    };
-    reader.readAsText(file);
-  }
-
   document.body.addEventListener('keydown', function(event) {
     if (event.code === 'KeyS' && (event.metaKey || event.ctrlKey)) {
       event.preventDefault();
       downloadDiagram();
     }
-
-    if (event.code === 'KeyO' && (event.metaKey || event.ctrlKey)) {
-      event.preventDefault();
-      fileOpen().then(openFile);
-    }
   });
-
-  var exportArtifacts = debounce(async function() {
-    try {
-      const { svg } = await bpmnModeler.saveSVG();
-      setEncoded(downloadSvgLink, 'diagram.svg', svg);
-    } catch (err) {
-      console.error('Error al guardar SVG: ', err);
-      setEncoded(downloadSvgLink, 'diagram.svg', null);
-    }
-
-    try {
-      const { xml } = await bpmnModeler.saveXML({ format: true });
-      setEncoded(downloadLink, 'diagram.bpmn', xml);
-    } catch (err) {
-      console.error('Error al guardar XML: ', err);
-      setEncoded(downloadLink, 'diagram.bpmn', null);
-    }
-  }, 500);
-
-  $('#js-download-json').click(function() {
-    try {
-      exportArtifacts();
-    } catch (err) {
-      console.error('Error al exportar artefactos:', err);
-    }
-  });
-
-  function getQueryParam(param) {
-    var urlParams = new URLSearchParams(window.location.search);
-    return urlParams.get(param);
-  }
-  var modelFile = getQueryParam('model') || 'example';
-
-  createNewDiagram(modelFile);
-  registerFileDrop($('#canvas'), openDiagram);
-
-  $('#js-download-diagram').click(function() {
-    exportArtifacts();
-  });
-
-  bpmnModeler.on('commandStack.changed', () => {
-    exportArtifacts();
-  });
-
-let isDownloading2 = false;
-
-$('#button2').off('click').on('click', async function(e) {
-  e.preventDefault();
-  e.stopPropagation();
-  e.stopImmediatePropagation();
-
-  if (isDownloading2) return;
-  isDownloading2 = true;
-
-  try {
-    const content = await deployRules(bpmnModeler);
-
-    const blob = new Blob([content], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = 'deployRules.json';
-
-    document.body.appendChild(link);
-    link.click();
-
-    document.body.removeChild(link);
-    URL.revokeObjectURL(url);
-  } catch (err) {
-    console.error('Error al exportar Deploy Rules (JSON):', err);
-  } finally {
-    isDownloading2 = false;
-  }
-});
 
   if (!window.FileList || !window.FileReader) {
     window.alert(
@@ -425,8 +182,26 @@ $('#button2').off('click').on('click', async function(e) {
     'Prueba usar Chrome, Firefox o Internet Explorer > 10.');
   }
 
+  function appendMessage(sender, text) {
+    const container = document.getElementById('modal-content-tab3');
+    const msgEl = document.createElement('div');
+    msgEl.classList.add('message', sender);
 
-$('#js-chatbot').off('click').on('click', async function(e) {
+    const unsafeHtml = md.render(text);
+    const cleanHtml = DOMPurify.sanitize(unsafeHtml);
+    msgEl.innerHTML = cleanHtml;
+
+    container.appendChild(msgEl);
+    msgEl.scrollIntoView({ block: 'start' });
+  }
+
+  const md = new MarkdownIt({
+    html:        true,
+    linkify:     true,
+    typographer: true,
+  });
+
+$('#js-simulate').off('click').on('click', async function(e) {
   e.preventDefault();
   e.stopPropagation();
   e.stopImmediatePropagation();
@@ -435,7 +210,7 @@ $('#js-chatbot').off('click').on('click', async function(e) {
     const { xml: diagramXML } = await bpmnModeler.saveXML({format: true});
     const content = await exportToEsper(bpmnModeler);
 
-    const response = await fetch('http://localhost:3000/start-chatbot', {
+    const response = await fetch('http://localhost:3000/simulate', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -444,28 +219,51 @@ $('#js-chatbot').off('click').on('click', async function(e) {
     });
 
     if (!response.ok) {
-      throw new Error(`Error starting chatbot: ${response.statusText}`);
+      throw new Error(`There has been an error in the simulation: ${response.statusText}`);
     }
     const data = await response.json();
-    console.log('Server says:', data.message);
-    const botResponse = await fetch('http://localhost:3001/newChat', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({}),
-    });
-    if (!botResponse.ok) {
-      throw new Error(`Error starting chatbot: ${botResponse.statusText}`);
-    }
-    const botData = await botResponse.json();
-    document.querySelector('.chatbotModal-overlay').style.display = 'block';
-    const chatbotContent = document.getElementById('chatbot-content');
-    console.log(botData)
-    chatbotContent.textContent = "Bot started. " + botData.reply + "\n";
+
+    await bpmnModeler.importXML(data.heatMap);
+    const { svg } = await bpmnModeler.saveSVG();
+    await bpmnModeler.importXML(diagramXML);
+    document.querySelector('#modal-content-tab1').textContent = data.simulation;
+    document.querySelector('#modal-content-tab2').innerHTML = svg;
+    document.querySelector('#modal-content-tab3').innerHTML = '';
+    appendMessage('bot', data.reply);
+    document.querySelector('.modal-overlay').style.display = 'block';
   } catch (err) {
-    console.error('Error starting chatbot:', err);
+    console.error('Error during the simulation:', err);
   }
+});
+
+$('#js-continue').off('click').on('click', async function(e) {
+  e.preventDefault();
+  e.stopPropagation();
+  e.stopImmediatePropagation();
+
+  try {
+    document.querySelector('.modal-overlay').style.display = 'block';
+  } catch (err) {
+    console.error('Error retrieving the simulation:', err);
+  }
+});
+
+document.getElementById('close-modal').addEventListener('click', function() {
+  document.querySelector('.modal-overlay').style.display = 'none';
+});
+
+document.querySelectorAll('.tab-button').forEach(function(button) {
+  button.addEventListener('click', function() {
+    var tab = this.dataset.tab;
+    document.querySelectorAll('.tab-button').forEach(function(btn) {
+      btn.classList.remove('active');
+    });
+    this.classList.add('active');
+    document.querySelectorAll('.tab-content').forEach(function(content) {
+      content.classList.remove('active');
+    });
+    document.getElementById(tab + '-content').classList.add('active');
+  });
 });
 
 document.getElementById('send-chatbot').addEventListener('click', async function() {
@@ -473,29 +271,26 @@ document.getElementById('send-chatbot').addEventListener('click', async function
   const message = input.value.trim();
   if (!message) return;
 
-  const chatbotContent = document.getElementById('chatbot-content');
-  chatbotContent.textContent += "\nUser: " + message;
+  const llm = document.getElementById('chatbot-selector').value;
+
+  appendMessage('user', message);
   input.value = "";
 
   try {
-    const response = await fetch('http://localhost:3001/continueChat', {
+    const response = await fetch('http://localhost:3000/continueChat', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ message })
+      body: JSON.stringify({ message, llm })
     });
     if (!response.ok) {
       throw new Error(`Network response was not ok: ${response.statusText}`);
     }
     const data = await response.json();
-    chatbotContent.textContent += "\nBot: " + (data.reply || "No reply.");
+    appendMessage('bot', (data.reply || "No reply."));
   } catch (err) {
     console.error('Error sending chat message:', err);
     chatbotContent.textContent += "\nBot: Error processing your message.";
   }
-});
-
-document.getElementById('close-chatbotModal').addEventListener('click', function() {
-  document.querySelector('.chatbotModal-overlay').style.display = 'none';
 });
 
 });
