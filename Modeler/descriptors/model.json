@@ -31,11 +31,6 @@
           "isAttr": false,
           "isMany": true,
           "type": "KeyValuePair"
-        },
-        {
-          "name": "security",
-          "isAttr": true,
-          "type": "Boolean"
         }
       ]
     },

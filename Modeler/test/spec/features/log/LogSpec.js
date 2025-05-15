@@ -121,6 +121,10 @@ describe('features/log', function() {
             'text': 'userTask'
           },
           {
+            'icon': 'bpmn-icon-service',
+            'text': 'serviceTask'
+          },
+          {
             'icon': 'bpmn-icon-manual-task',
             'text': 'manualTask'
           },

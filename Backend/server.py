@@ -27,7 +27,7 @@ def startSimulation():
         simulation = f.read()
 
     systemPrompt = """\
-You are an assistant expert in BPMN modeling, simulation, and security. The following logs and BPMN data describe a process with multiple lanes and user roles. Use them as context to answer questions or provide suggestions.
+You are an assistant expert in BPMN modeling and simulation. The following logs and BPMN data describe a process with multiple lanes and user roles. Use them as context to answer questions or provide suggestions.
 """
 
     contextInfo = f"""

@@ -2,7 +2,6 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-
   <title>Modeler</title>
 
   <link rel="stylesheet" href="./dist/vendor/bpmn-js/assets/diagram-js.css" />
@@ -15,10 +14,10 @@
 
   <meta property="og:locale" content="en_US" />
   <meta property="og:type" content="website" />
-  <meta property="og:site_name" content="XSecBPMN" />
-  <meta property="og:title" content="Security BPMN Modeler" />
-  <meta property="og:url" content="https://github.com/ajvarela/caise2025" />
-  <meta property="og:description" content="A Bpmn modeler and simulator with Security elements" />
+  <meta property="og:site_name" content="SimBPMN" />
+  <meta property="og:title" content="BPMN Modeling and Simulation" />
+  <meta property="og:url" content="https://github.com/Joaquin-Arregui/SimBPMN" />
+  <meta property="og:description" content="A Bpmn modeler and simulator with colaboration and multi-instance elements." />
 </head>
 <body>
 
@@ -48,17 +47,15 @@
         <pre id="modal-content-tab1">Results of the simulation</pre>
       </div>
       <div class="tab-content" id="tab2-content">
-        <pre id="modal-content-tab2">Heatmap of the model</pre>
+        <div id="heatmap-container"></div>
       </div>
       <div class="tab-content" id="tab3-content">
         <select id="chatbot-selector">
-          <option value="gpt">Gpt</option>
+          <option value="gpt">GPT</option>
           <option value="llama">LLaMA</option>
           <option value="deepseek">DeepSeek</option>
         </select>
-        <div class="chatbot-body" id="modal-content-tab3">
-          
-        </div>
+        <div class="chatbot-body" id="modal-content-tab3"></div>
         <div class="modal-content-tab3-footer">
           <input type="text" id="chatbot-input" placeholder="Type your message..." />
           <button id="send-chatbot">Send</button>

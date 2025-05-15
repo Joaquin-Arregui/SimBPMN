@@ -17,11 +17,6 @@
             "name": "instance",
             "isAttr": true,
             "type": "Integer"
-          },
-          {
-            "name": "security",
-            "isAttr": true,
-            "type": "Boolean"
           }
         ]
       }

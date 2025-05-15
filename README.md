@@ -1,4 +1,4 @@
-# XSecBPMN
+# SimBPMN
 
 ## Prerequisites
 
@@ -14,24 +14,16 @@ Before running the project, ensure that you have the following software installe
      git --version
      ```
 
-2. **Java Development Kit (JDK) 1.8 or higher**
-   - Required for the **Engine** module.
-   - [Download JDK](https://www.oracle.com/java/technologies/javase-downloads.html)
+2. **Python 3.10.0 or higher**
+   - Required for the **Backend** module.
+   - [Download Python](https://www.python.org/downloads/release/python-3100//)
    - Verify installation:
      ```bash
-     java -version
+     python --version
      ```
 
-3. **Apache Maven**
-   - Required for building the **Engine** module.
-   - [Download Maven](https://maven.apache.org/)
-   - Verify installation:
-     ```bash
-     mvn -version
-     ```
-
-4. **Node.js v16 or higher**
-   - Required for the **Backend** and **Modeler** modules.
+3. **Node.js v16 or higher**
+   - Required for the **Modeler** module.
    - [Download Node.js](https://nodejs.org/)
    - Verify installation:
      ```bash
@@ -39,37 +31,16 @@ Before running the project, ensure that you have the following software installe
      npm -v
      ```
 
-5. **Python 3.7 or higher**
-   - Required for the **Simulator** module.
-   - [Download Python](https://www.python.org/)
-   - Verify installation:
-     ```bash
-     python --version
-     pip --version
-     ```
-
----
-
 ### Module-Specific Requirements
-
-#### Simulator
-
-- **Python Packages** are specified in `simulator/requirements.txt`.
-
-- **Install Dependencies**:
-```bash
-cd Simulator
-pip install -r requirements.txt
-```
 
 #### Backend
 
-- **Dependencies** are specified in `backend/package.json`.
+- **Dependencies** are specified in `requirements.txt`.
 
 - **Install Dependencies**:
 ```bash
 cd Backend
-npm install
+pip install -r requirements.txt
 ```
 
 #### Modeler
@@ -82,32 +53,18 @@ cd Modeler
 npm install
 ```
 
-#### Engine
-
-- **Dependencies** are specified in `engine/pom.xml`.
-
-- **Build the Engine Module**:
-```bash
-cd Engine
-mvn clean install
-```
-
 ## How to Run the Project
 
 Once all prerequisites are installed, you can run the entire project with a single command:
 
- - **Navigate to the Root Folder**:
+ 1. **Navigate to the Root Folder**:
 ```bash
-cd XSecBPMN
+cd SimBPMN
 ```
 
- - **Run the project**:
+ 2. **Run the project**:
 On Windows, execute the following command from the root directory:
 ```bash
-./start.bat
-```
-or
-```bash
-start.bat
+./run.bat
 ```
 This script will handle the execution and orchestration of all modules.

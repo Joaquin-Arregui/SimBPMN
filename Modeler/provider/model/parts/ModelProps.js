@@ -28,12 +28,6 @@ export default function(element) {
       element,
       component: frequencyFunction,
       isEdited: isNumberEntryEdited
-    },
-    {
-      id: 'security',
-      element,
-      component: securityFunction,
-      isEdited: isCheckboxEntryEdited
     }
   ];
 }
@@ -378,39 +372,6 @@ function userWithRoleFunction(props) {
   `;
 }
 
-function securityFunction(props) {
-  const { element, id } = props;
-
-  const modeling = useService('modeling');
-  const translate = useService('translate');
-
-  const getValue = () => {
-    if (!element || !element.businessObject) {
-      return false;
-    }
-    const value = element.businessObject.security;
-    return value === true;
-  };
-
-  const setValue = (value) => {
-    if (!element || !element.businessObject) {
-      return;
-    }
-    modeling.updateModdleProperties(element, element.businessObject, {
-      security: value === true ? true : undefined
-    });
-  };
-
-  return html`<${CheckboxEntry}
-    id=${id}
-    element=${element}
-    label=${translate('Security')}
-    getValue=${getValue}
-    setValue=${setValue}
-    tooltip=${translate('Enable or disable security setting.')}
-  />`;
-}
-
 function isNumberEntryEdited(element) {
 
   if (!element || !element.businessObject) {
@@ -446,12 +407,4 @@ function isListOfStringEntryEdited(element) {
 
   // Retornamos true si al menos un elemento en la lista no es un string vacío
   return userWithoutRoleValues.some(value => typeof value === 'string' && value !== '');
-}
-
-function isCheckboxEntryEdited(element) {
-  if (!element || !element.businessObject) {
-    return false;
-  }
-  const securityValue = element.businessObject.security;
-  return typeof securityValue !== 'undefined';
 }

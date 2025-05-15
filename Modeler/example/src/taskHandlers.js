@@ -1,85 +1,5 @@
 const axios = require('axios');
 
-function getSecurityTasks(bpmnModeler) {
-  var elementRegistry = bpmnModeler.get('elementRegistry');
-  var definitions = bpmnModeler.get('canvas').getRootElement().businessObject.$parent;
-  var id_model = definitions.diagrams[0].id;
-  var serviceTasks = elementRegistry.filter(e => e.type === 'bpmn:ServiceTask');
-  var serviceTaskBusinessObjects = serviceTasks.map(e => e.businessObject);
-  var res = [];
-
-  serviceTaskBusinessObjects.forEach(function(element) {
-    var list = element.outgoing;
-    var subTasks = [];
-
-    if (!list || list.length === 0) {
-      console.warn(`No hay conexiones salientes (outgoing) para la tarea: ${element.id}`);
-    } else {
-      list.forEach(function(task) {
-        if (task.targetRef) {
-          const subTaskElement = elementRegistry.get(task.targetRef.id);
-
-          if (subTaskElement && subTaskElement.businessObject) {
-            const targetType = subTaskElement.businessObject.$type;
-
-            let userTask = '""';
-            let numberOfExecutions = '1';
-            let averageTimeEstimate = 'N/A';
-            let instance = 'N/A';
-            if (targetType === 'bpmn:UserTask' || targetType === 'bpmn:Task') {
-              const bo = subTaskElement.businessObject;
-              userTask = bo.userTask || bo.UserTask || bo.assignee || bo.candidateUsers || bo.name || 'Unknown';
-              numberOfExecutions = bo.numberOfExecutions || 'N/A';
-              averageTimeEstimate = bo.averageTimeEstimate || 'N/A';
-              instance = bo.instance || 'N/A';
-            }
-
-            subTasks.push({
-              taskId: subTaskElement.id,
-              UserTask: userTask,
-              NumberOfExecutions: numberOfExecutions,
-              AverageTimeEstimate: averageTimeEstimate,
-              Instance: instance
-            });
-          } else {
-            console.warn(`El targetRef existe pero no tiene un businessObject para la tarea con id: ${task.targetRef.id}`);
-            subTasks.push({
-              taskId: task.targetRef.id,
-              UserTask: 'N/A',
-              NumberOfExecutions: 'N/A',
-              AverageTimeEstimate: 'N/A',
-              Instance: 'N/A'
-            });
-          }
-        } else {
-          console.warn(`No se encontró targetRef para la tarea con id: ${task.id}`);
-        }
-      });
-    }
-
-    var isBod = element.securityType === 'BoD';
-    var isSod = element.securityType === 'SoD';
-    var isUoc = element.securityType === 'UoC';
-    var st = {
-      id_model: id_model,
-      id_bpmn: element.id,
-      Bod: isBod ? true : false,
-      Sod: isSod ? true : false,
-      Uoc: isUoc ? true : false,
-      Mth: element.Mth || 0,
-      P: element.P || 0,
-      User: element.User || '',
-      Log: element.Log || '',
-      NumberOfExecutions: element.numberOfExecutions || 'N/A',
-      AverageTimeEstimate: element.averageTimeEstimate || 'N/A',
-      Instance: element.instance || 'N/A',
-      SubTasks: subTasks.length > 0 ? subTasks : []
-    };
-    res.push(st);
-  });
-  return res;
-}
-
 function getAllRelevantTasks(bpmnModeler) {
   var elementRegistry = bpmnModeler.get('elementRegistry');
   var definitions = bpmnModeler.get('canvas').getRootElement().businessObject.$parent;
@@ -207,7 +127,6 @@ function getAllRelevantTasks(bpmnModeler) {
     const isParticipant = e.type === 'bpmn:Participant';
     const isLane = e.type === 'bpmn:Lane';
     const isSequenceFlow = e.type === 'bpmn:SequenceFlow' || e.type === 'bpmn:MessageFlow';
-    const securityType = businessObject.securityType || '';
     const percentageOfBranches = isSequenceFlow ? (businessObject.percentageOfBranches || 0) : 0;
 
     let time = null;
@@ -227,8 +146,7 @@ function getAllRelevantTasks(bpmnModeler) {
     const multiInstance = businessObject.loopCharacteristics?.isSequential ?? 'undefined';
     const AdditionalIntegerParameter = businessObject.AdditionalIntegerParameter || 0;
 
-    let instance = ''; 
-    let security = false; 
+    let instance = '';  
     let userWithRole = {};
     let userWithoutRole = [];
     let userWithoutRoleSet = new Set();
@@ -241,9 +159,6 @@ function getAllRelevantTasks(bpmnModeler) {
       if (businessObject) {
         if (businessObject.instance !== undefined) {
           instance = businessObject.instance;
-        }
-        if (businessObject.security !== undefined) {
-          security = businessObject.security;
         }
       }
     } else if (e.type === 'bpmn:Participant') {
@@ -296,9 +211,6 @@ function getAllRelevantTasks(bpmnModeler) {
       if (businessObject.frequency !== undefined) {
         frequency = businessObject.frequency;
       }
-      if (businessObject.security !== undefined) {
-        security = businessObject.security;
-      }
     } else {
       instance = businessObject.instance || '';
     }
@@ -308,9 +220,6 @@ function getAllRelevantTasks(bpmnModeler) {
       id_bpmn: businessObject.id,
       name: businessObject.name || '',
       type: businessObject.$type || '',
-      Bod: securityType === 'BoD',
-      Sod: securityType === 'SoD',
-      Uoc: securityType === 'UoC',
       Mth: isServiceTask ? (businessObject.Mth || 0) : 0,
       P: isServiceTask ? (businessObject.P || 0) : 0,
       User: isServiceTask ? (businessObject.User || '') : '',
@@ -326,7 +235,6 @@ function getAllRelevantTasks(bpmnModeler) {
       MinimumTime: minimumTime,
       MaximumTime: maximumTime,
       UserInstance: instance,
-      security: security,
       time: time,
       userWithoutRole: (isProcess || isLane || isParticipant) ? userWithoutRole : '',
       userWithRole: Object.entries(businessObject.userWithRole || {}).map(([role, users]) => ({
@@ -383,22 +291,9 @@ function exportToEsper(bpmnModeler) {
 
           content += `superElement="${superElement}", `;
           content += `subElement="${subElement}"]\n`;
-        } else if (element.type === 'bpmn:ServiceTask' && element.Uoc) {
-          content += `sodSecurity=${element.Sod}, `;
-          content += `bodSecurity=${element.Bod}, `;
-          content += `uocSecurity=${element.Uoc}, `;
-          content += `mth=${element.Mth}, `;
-          const subTasks = element.SubTasks ? element.SubTasks.join(', ') : 'No SubTasks';
-          content += `subTask="${subTasks}"]\n`;
-        } else if (element.type === 'bpmn:ServiceTask') {
-          content += `sodSecurity=${element.Sod}, `;
-          content += `bodSecurity=${element.Bod}, `;
-          content += `uocSecurity=${element.Uoc}, `;
-          const subTasks = element.SubTasks ? element.SubTasks.join(', ') : 'No SubTasks';
-          content += `subTask="${subTasks}"]\n`;
         } else if (element.type === 'bpmn:Task' || element.type === 'bpmn:UserTask' || element.type === 'bpmn:ManualTask'
           || element.type === 'bpmn:SendTask' || element.type === 'bpmn:ReceiveTask' || element.type === 'bpmn:BusinessRuleTask'
-          || element.type === 'bpmn:ScriptTask' || element.type === 'bpmn:CallActivity'
+          || element.type === 'bpmn:ScriptTask' || element.type === 'bpmn:CallActivity' || element.type === 'bpmn:ServiceTask'
         ) {
           content += `userTask="${element.UserTask || '""'}", `;
           content += `numberOfExecutions=${element.NumberOfExecutions}, `;
@@ -413,8 +308,7 @@ function exportToEsper(bpmnModeler) {
           const subTasks = element.SubTasks ? element.SubTasks.join(', ') : 'No SubTasks';
           content += `subTask="${subTasks}"]\n`;
         } else if (element.type === 'bpmn:Collaboration') {
-          content += `instances=${element.Instances}, `;
-          content += `security=${element.security}]\n`;
+          content += `instances=${element.Instances}]\n`;
         } else if (element.type === 'bpmn:Lane') {
           const userWithoutRole = Array.isArray(element.userWithoutRole)
             ? element.userWithoutRole.map(user => `"${user}"`).join(', ')
@@ -449,8 +343,7 @@ function exportToEsper(bpmnModeler) {
                 .join(', ')
             : '{}';
         
-          content += `userWithRole={${userWithRole}}, `;
-          content += `security=${element.security}]\n`;
+          content += `userWithRole={${userWithRole}}]\n`;
         } else if (element.type === 'bpmn:Participant') {
           const userWithoutRole = Array.isArray(element.userWithoutRole)
             ? element.userWithoutRole.map(user => `"${user}"`).join(', ')
@@ -478,174 +371,6 @@ function exportToEsper(bpmnModeler) {
   });
 }
 
-function getTaskById(bpmnModeler, taskId) {
-  const elementRegistry = bpmnModeler.get('elementRegistry');
-  const element = elementRegistry.get(taskId);
-  return element ? element.businessObject : null;
-}
-
-function esperRules(bpmnModeler) {
-  return new Promise((resolve, reject) => {
-    try {
-      const elements = getAllRelevantTasks(bpmnModeler);
-      const triggeredRules = [];
-      elements.filter(element => element.type === "bpmn:ServiceTask").forEach(element => {
-        const subTasks = element.SubTasks
-          ? element.SubTasks.map(id => getTaskById(bpmnModeler, id)).filter(st => st !== null)
-          : [];
-
-        const isBoD = element.Bod === true;
-        const isSoD = element.Sod === true;
-        const isUoC = element.Uoc === true;
-
-        const triggeredRuleData = {
-          id_bpmn: element.id_bpmn || 'Unknown',
-          triggeredMessages: []
-        };
-        if (isBoD) {
-          message = `[BOD MONITOR] Binding of Duty rule detected:\n` +
-            `- Parent Task ID: ${element.id_bpmn}\n`;
-          for(let i = 0; i<subTasks.length; i++) {
-            subTask = subTasks[i];
-            const subTaskId = subTask.id;
-            const user = subTask.UserTask;
-            message = message +
-            `- SubTask ${i} ID: ${subTaskId} - User ID: ${user}\n`;
-          }
-          message = message +
-          `- Expected: The same user should perform the tasks.\n`
-          triggeredRuleData.triggeredMessages.push(message);
-        }
-        if (isSoD) {
-          message = `[SOD MONITOR] Separation of Duties rule detected:\n` +
-            `- Parent Task ID: ${element.id_bpmn}\n`;
-          for(let i = 0; i<subTasks.length; i++) {
-            subTask = subTasks[i];
-            const subTaskId = subTask.id;
-            const user = subTask.UserTask;
-            message = message +
-            `- SubTask ${i} ID: ${subTaskId} - User ID: ${user}\n`;
-          }
-          message = message +
-          `- Expected: Different users should perform the tasks.\n`
-          triggeredRuleData.triggeredMessages.push(message);
-        }
-        if (isUoC) {
-          message = `[UOC MONITOR] Use of Control rule detected:\n` +
-            `- Parent Task ID: ${element.id_bpmn}\n`;
-          for(let i = 0; i<subTasks.length; i++) {
-            subTask = subTasks[i];
-            const subTaskId = subTask.id;
-            const user = subTask.UserTask;
-            const numberOfExecutions = subTask.NumberOfExecutions;
-            message = message +
-            `- SubTask ${i} ID: ${subTaskId} - User ID: ${user} - Number of executions: ${numberOfExecutions}\n`;
-          }
-          message = message +
-          `- Expected: Each user should perform a maximum of ${element.Mth} executions.\n`
-          triggeredRuleData.triggeredMessages.push(message);
-        }
-        if (triggeredRuleData.triggeredMessages.length > 0) {
-          triggeredRules.push(triggeredRuleData);
-        }
-      });
-      if (triggeredRules.length === 0) {
-        triggeredRules.push({ message: 'No rules detected.' });
-      }
-      resolve(JSON.stringify(triggeredRules, null, 2));
-    } catch (err) {
-      reject(err);
-    }
-  });
-}
-
-function deployRules(bpmnModeler) {
-  return new Promise((resolve, reject) => {
-    try {
-      const elements = getAllRelevantTasks(bpmnModeler);
-
-      let eplStatements = "";
-
-      const bodElements = elements.filter(element => element.Bod === true);
-      if (bodElements.length > 0) {
-        const bodEPL = `"select parent.idBpmn as parentId, "
-  "sub1.idBpmn as subTask1Id, sub2.idBpmn as subTask2Id, "
-  "sub1.userTask as user1, sub2.userTask as user2, "
-  "sub1.instance as instance1 "
-  "from Task#keepall as parent, Task#keepall as sub1, Task#keepall as sub2 "
-  "where parent.bodSecurity = true "
-  "and sub1.userTask is not null and sub2.userTask is not null "
-  "and sub1.userTask != sub2.userTask "
-  "and sub1.idBpmn != sub2.idBpmn "
-  "and sub1.idBpmn in (parent.subTasks) "
-  "and sub2.idBpmn in (parent.subTasks) "
-  "and sub1.instance = sub2.instance"
-
---------------------------------------
-
-`;
-
-        eplStatements += bodEPL;
-      }
-
-      const sodElements = elements.filter(element => element.Sod === true);
-      if (sodElements.length > 0) {
-        const sodEPL = `"select parent.idBpmn as parentId, "
-  "sub1.idBpmn as subTask1Id, sub2.idBpmn as subTask2Id, "
-  "sub1.userTask as userTask1, sub2.userTask as userTask2, "
-  "sub1.instance as instance1 "
-  "from Task#keepall as parent, Task#keepall as sub1, Task#keepall as sub2 "
-  "where parent.sodSecurity = true "
-  "and sub1.idBpmn != sub2.idBpmn "
-  "and sub1.idBpmn in (parent.subTasks) "
-  "and sub2.idBpmn in (parent.subTasks) "
-  "and sub1.instance = sub2.instance "
-  "and sub1.userTask is not null "
-  "and sub2.userTask is not null "
-  "and sub1.userTask = sub2.userTask "
-  "and sub1.idBpmn < sub2.idBpmn"
-
---------------------------------------
-
-`;
-
-        eplStatements += sodEPL;
-      }
-      const uocElements = elements.filter(element => element.Uoc === true);
-      if (uocElements.length > 0) {
-        const uocEPL = `"select parent.idBpmn as parentId, "
-  "sub1.idBpmn as subTaskId, "
-  "sub1.userTask as userTask, "
-  "sub1.instance as instance1, "
-  "sub1.numberOfExecutions as totalExecutions, "
-  "parent.mth as parentMth "
-  "from Task#keepall as parent, Task#keepall as sub1 "
-  "where parent.uocSecurity = true "
-  "and sub1.idBpmn in (parent.subTasks) "
-  "and sub1.userTask is not null "
-  "and sub1.numberOfExecutions > parent.mth "
-  "group by parent.idBpmn, sub1.idBpmn, parent.mth, sub1.instance"
-
---------------------------------------
-
-`;
-
-        eplStatements += uocEPL;
-      }
-      if (eplStatements.trim() === "") {
-        eplStatements = "No relevant rules generated.";
-      }
-      resolve(eplStatements);
-    } catch (err) {
-      reject(err);
-    }
-  });
-}
-
 module.exports = {
-  getSecurityTasks,
-  getAllRelevantTasks,
-  esperRules,
-  deployRules,
   exportToEsper
 };

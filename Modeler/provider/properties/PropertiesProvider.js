@@ -1,4 +1,3 @@
-import SecurityProps from './parts/SecurityProps';
 import UserProps from '../user/parts/UserProps';
 import SequenceFlowProps from '../sequenceFlow/parts/SequenceFlowProps';
 import ModelProps from '../model/parts/ModelProps';
@@ -11,22 +10,16 @@ import { is } from 'bpmn-js/lib/util/ModelUtil';
 
 const LOW_PRIORITY = 500;
 
-export default function SecurityPropertiesProvider(propertiesPanel, translate) {
+export default function PropertiesProvider(propertiesPanel, translate) {
 
   // API ////////
 
   this.getGroups = function(element) {
     return function(groups) {
-      if (is(element, 'bpmn:ServiceTask') && element.businessObject.securityType === 'SoD') {
-        return groups;
-      } else if (is(element, 'bpmn:ServiceTask') && element.businessObject.securityType === 'BoD') {
-        return groups;
-      } else if (is(element, 'bpmn:ServiceTask') && element.businessObject.securityType === 'UoC') {
-        groups.push(createUoCGroup(element, translate));
-      } else if (is(element, 'bpmn:ManualTask') || is(element, 'bpmn:UserTask') || (is(element, 'bpmn:Task') 
+      if (is(element, 'bpmn:ManualTask') || is(element, 'bpmn:UserTask') || (is(element, 'bpmn:Task') 
         || is(element, 'bpmn:BusinessRuleTask') || is(element, 'bpmn:ScriptTask') || is(element, 'bpmn:CallActivity') 
         || is(element, 'bpmn:SendTask') || is(element, 'bpmn:ReceiveTask')
-        && !is(element, 'bpmn:ServiceTask'))) {
+        || is(element, 'bpmn:ServiceTask'))) {
         groups.push(createUserGroup(element, translate));
       } else if (is(element, 'bpmn:SequenceFlow')) {
         const lengthSubTask = element.businessObject.sourceRef.outgoing.length;
@@ -58,18 +51,7 @@ export default function SecurityPropertiesProvider(propertiesPanel, translate) {
   propertiesPanel.registerProvider(LOW_PRIORITY, this);
 }
 
-SecurityPropertiesProvider.$inject = ['propertiesPanel', 'translate'];
-
-function createUoCGroup(element, translate) {
-  const securityGroup = {
-    id: 'security-uoc',
-    label: translate('UoC properties'),
-    entries: SecurityProps(element),
-    tooltip: translate('Ensure proper UoC management!')
-  };
-
-  return securityGroup;
-}
+PropertiesProvider.$inject = ['propertiesPanel', 'translate'];
 
 function createUserGroup(element, translate) {
   const userGroup = {

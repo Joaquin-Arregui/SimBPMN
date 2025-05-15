@@ -1,7 +1,7 @@
 import subprocess
 import os
 from simulator.generateScript import generateScript
-from simulator.models.parser import parse_bpmn_elements
+from simulator.parser import parse_bpmn_elements
 
 def processSimulation(rules):
 
