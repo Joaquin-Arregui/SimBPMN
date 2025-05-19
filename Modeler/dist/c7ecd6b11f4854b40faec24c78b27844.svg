@@ -1,0 +1,14 @@
+var _path;
+function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
+import * as React from "react";
+var SvgToggleOff = function SvgToggleOff(props) {
+  return /*#__PURE__*/React.createElement("svg", _extends({
+    xmlns: "http://www.w3.org/2000/svg",
+    viewBox: "0 0 576 512"
+  }, props), _path || (_path = /*#__PURE__*/React.createElement("path", {
+    fill: "currentColor",
+    d: "M384 64H192C85.961 64 0 149.961 0 256s85.961 192 192 192h192c106.039 0 192-85.961 192-192S490.039 64 384 64M64 256c0-70.741 57.249-128 128-128 70.741 0 128 57.249 128 128 0 70.741-57.249 128-128 128-70.741 0-128-57.249-128-128m320 128h-48.905c65.217-72.858 65.236-183.12 0-256H384c70.741 0 128 57.249 128 128 0 70.74-57.249 128-128 128"
+  })));
+};
+export { SvgToggleOff as ReactComponent };
+export default "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1NzYgNTEyIj48IS0tIEZvbnQgQXdlc29tZSBGcmVlIDUuMTUuNCBieSBAZm9udGF3ZXNvbWUgLSBodHRwczovL2ZvbnRhd2Vzb21lLmNvbSBMaWNlbnNlIC0gaHR0cHM6Ly9mb250YXdlc29tZS5jb20vbGljZW5zZS9mcmVlIChJY29uczogQ0MgQlkgNC4wLCBGb250czogU0lMIE9GTCAxLjEsIENvZGU6IE1JVCBMaWNlbnNlKSAtLT48cGF0aCBmaWxsPSJjdXJyZW50Q29sb3IiIGQ9Ik0zODQgNjRIMTkyQzg1Ljk2MSA2NCAwIDE0OS45NjEgMCAyNTZzODUuOTYxIDE5MiAxOTIgMTkyaDE5MmMxMDYuMDM5IDAgMTkyLTg1Ljk2MSAxOTItMTkyUzQ5MC4wMzkgNjQgMzg0IDY0ek02NCAyNTZjMC03MC43NDEgNTcuMjQ5LTEyOCAxMjgtMTI4IDcwLjc0MSAwIDEyOCA1Ny4yNDkgMTI4IDEyOCAwIDcwLjc0MS01Ny4yNDkgMTI4LTEyOCAxMjgtNzAuNzQxIDAtMTI4LTU3LjI0OS0xMjgtMTI4em0zMjAgMTI4aC00OC45MDVjNjUuMjE3LTcyLjg1OCA2NS4yMzYtMTgzLjEyIDAtMjU2SDM4NGM3MC43NDEgMCAxMjggNTcuMjQ5IDEyOCAxMjggMCA3MC43NC01Ny4yNDkgMTI4LTEyOCAxMjh6Ii8+PC9zdmc+";

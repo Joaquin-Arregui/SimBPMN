@@ -1,3 +1,6 @@
-/rules/
-/results/
-/__pycache__/
+Backend/simulator/__pycache__/
+Backend/simulator/models/__pycache__/
+Backend/simulator/simulationFunctions/__pycache__/
+Backend/heatMap/__pycache__/
+Backend/heatMap/heatMapFunctions/__pycache__/
+Backend/chatbot/.env

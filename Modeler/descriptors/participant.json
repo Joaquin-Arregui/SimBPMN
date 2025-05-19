@@ -1,0 +1,25 @@
+{
+    "name": "participantExtension",
+    "prefix": "participant",
+    "uri": "http://participant",
+    "xml": {
+      "tagAlias": "lowerCase"
+    },
+    "associations": [],
+    "types": [
+      {
+        "name": "participant",
+        "extends": [
+          "bpmn:Participant"
+        ],
+        "properties": [
+          {
+            "name": "frequency",
+            "isAttr": true,
+            "type": "Integer"
+          }      
+        ]
+      }
+    ]
+  }
+  

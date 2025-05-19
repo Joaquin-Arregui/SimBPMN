@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta property="og:locale" content="en_US" />
+        <meta property="og:type" content="website" />
+        <meta property="og:site_name" content="CEP4BPMSec" />
+        <meta property="og:title" content="Security BPMN Modeler" />
+        <meta property="og:url" content="https://github.com/ajvarela/caise2025" />
+        <meta property="og:description" content="A Bpmn modeler and simulator with Security elements" />
+        <title>Select an Example Model</title>
+        <style>
+            body {
+                font-family: 'Arial', sans-serif;
+                text-align: center;
+                padding: 20px;
+            }
+            .model-grid {
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 40px;
+                justify-items: center;
+                max-width: 800px;
+                margin: 0 auto;
+            }
+            .model-item {
+                text-align: center;
+            }
+            .model-item img {
+                width: 300px;
+                height: 200px;
+                object-fit: contain;
+                cursor: pointer;
+                border: 2px solid #ccc;
+                border-radius: 5px;
+            }
+            .model-item img:hover {
+                border-color: #888;
+            }
+            .model-item p {
+                margin-top: 10px;
+                font-size: 16px;
+                color: #555;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>Select an Example Model</h1>
+        <div class="model-grid">
+            <div class="model-item">
+                <a href="modeler.html?model=model1">
+                    <img src="images/model1.png" alt="Example Model 1">
+                    <p>Example Model 1</p>
+                </a>
+            </div>
+            <div class="model-item">
+                <a href="modeler.html?model=model2">
+                    <img src="images/model2.png" alt="Example Model 2">
+                    <p>Example Model 2</p>
+                </a>
+            </div>
+            <div class="model-item">
+                <a href="modeler.html?model=model3">
+                    <img src="images/model3.png" alt="Example Model 3">
+                    <p>Example Model 3</p>
+                </a>
+            </div>
+            <div class="model-item">
+                <a href="modeler.html?model=model4">
+                    <img src="images/model4.png" alt="Example Model 4">
+                    <p>Example Model 4</p>
+                </a>
+            </div>
+        </div>
+    </body>
+</html>
