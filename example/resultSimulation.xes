@@ -1,0 +1,1690 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<log xes.version="1.0" xes.features="nested-attributes" openxes.version="1.0RC7" xmlns="http://www.xes-standard.org/">
+    <classifier name="Activity (by BPMN ID)" keys="bpmn:id" scope="event"/>
+    <global>
+        <string key="type" value="bpmn:Collaboration"/>
+        <string key="name" value="Unnamed"/>
+        <string key="id_bpmn" value="Process_Ludoteca"/>
+        <int key="instances" value="2"/>
+        <container key="bpmn:Lane">
+            <string key="bpmn:name" value="Administrative personnel"/>
+            <string key="bpmn:id" value="Lane_139d80b"/>
+            <string key="bpmn:users" value="['administrative1', 'administrative2', 'administrative3']"/>
+            <string key="bpmn:elements" value="['Activity_0mbqo4h', 'Activity_0c03ghp', 'Event_15940v7', 'Activity_0lu3j8v', 'Activity_0chu488', 'Activity_0xuu3c1', 'Activity_0dd9m33', 'Activity_06cj315']"/>
+        </container>
+        <container key="bpmn:Lane">
+            <string key="bpmn:name" value="Evaluation commitee"/>
+            <string key="bpmn:id" value="Lane_0zlk836"/>
+            <string key="bpmn:users" value="['commitee1', 'commitee2']"/>
+            <string key="bpmn:elements" value="['Activity_19xnx7n', 'Activity_08pkgdt']"/>
+        </container>
+        <container key="bpmn:Lane">
+            <string key="bpmn:name" value="Vicerector"/>
+            <string key="bpmn:id" value="Lane_05hh07e"/>
+            <string key="bpmn:users" value="['vicerector']"/>
+            <string key="bpmn:elements" value="['Event_0564wj7', 'Activity_1yy0hi2']"/>
+        </container>
+    </global>
+    <trace>
+        <string key="concept:name" value="Instance 1"/>
+        <event>
+            <string key="bpmn:type" value="bpmn:StartEvent"/>
+            <string key="bpmn:name" value="Unnamed"/>
+            <string key="bpmn:id" value="Event_19cvp47"/>
+            <string key="bpmn:subTask" value="Activity_0xkea5f"/>
+            <date key="time:timestamp" value="0"/>
+            <int key="bpmn:instance" value="1"/>
+        </event>
+        <event>
+            <string key="bpmn:type" value="bpmn:StartEvent"/>
+            <string key="bpmn:name" value="Unnamed"/>
+            <string key="bpmn:id" value="Event_0564wj7"/>
+            <string key="bpmn:subTask" value="Activity_1yy0hi2"/>
+            <date key="time:timestamp" value="0"/>
+            <int key="bpmn:instance" value="1"/>
+        </event>
+        <event>
+            <string key="bpmn:type" value="bpmn:Task"/>
+            <string key="bpmn:name" value="Fill in the form"/>
+            <string key="bpmn:id" value="Activity_0xkea5f"/>
+            <string key="bpmn:userTask" value="client3"/>
+            <int key="bpmn:execution" value="1"/>
+            <int key="bpmn:time" value="13"/>
+            <string key="bpmn:subTask" value="Activity_1ye848i"/>
+            <date key="time:timestamp" value="0"/>
+            <int key="bpmn:instance" value="1"/>
+        </event>
+        <event>
+            <string key="bpmn:type" value="bpmn:Task"/>
+            <string key="bpmn:name" value="Open a call for position in play centers"/>
+            <string key="bpmn:id" value="Activity_1yy0hi2"/>
+            <string key="bpmn:userTask" value="vicerector"/>
+            <int key="bpmn:execution" value="1"/>
+            <int key="bpmn:time" value="17"/>
+            <string key="bpmn:subTask" value="Activity_0lu3j8v"/>
+            <date key="time:timestamp" value="0"/>
+            <int key="bpmn:instance" value="1"/>
+        </event>
+        <event>
+            <string key="bpmn:type" value="bpmn:SendTask"/>
+            <string key="bpmn:name" value="Send Request"/>
+            <string key="bpmn:id" value="Activity_1ye848i"/>
+            <string key="bpmn:messageDestiny" value="Activity_0lu3j8v"/>
+            <string key="bpmn:userTask" value="clien2"/>
+            <int key="bpmn:execution" value="1"/>
+            <int key="bpmn:time" value="19"/>
+            <string key="bpmn:subTask" value="Activity_1qu0c6s"/>
+            <date key="time:timestamp" value="13"/>
+            <int key="bpmn:instance" value="1"/>
+        </event>
+        <event>
+            <string key="bpmn:type" value="bpmn:SendTask"/>
+            <string key="bpmn:name" value="Send Request"/>
+            <string key="bpmn:id" value="Activity_1ye848i"/>
+            <string key="bpmn:messageDestiny" value="Activity_0lu3j8v"/>
+            <string key="bpmn:userTask" value="client1"/>
+            <int key="bpmn:execution" value="2"/>
+            <int key="bpmn:time" value="12"/>
+            <string key="bpmn:subTask" value="Activity_1qu0c6s"/>
+            <date key="time:timestamp" value="13"/>
+            <int key="bpmn:instance" value="1"/>
+        </event>
+        <event>
+            <string key="bpmn:type" value="bpmn:SendTask"/>
+            <string key="bpmn:name" value="Send Request"/>
+            <string key="bpmn:id" value="Activity_1ye848i"/>
+            <string key="bpmn:messageDestiny" value="Activity_0lu3j8v"/>
+            <string key="bpmn:userTask" value="client3"/>
+            <int key="bpmn:execution" value="3"/>
+            <int key="bpmn:time" value="13"/>
+            <string key="bpmn:subTask" value="Activity_1qu0c6s"/>
+            <date key="time:timestamp" value="13"/>
+            <int key="bpmn:instance" value="1"/>
+        </event>
+        <event>
+            <string key="bpmn:type" value="StandByMessage"/>
+            <string key="bpmn:id" value="Activity_0lu3j8v"/>
+            <string key="bpmn:execution" value="2"/>
+            <date key="time:timestamp" value="17"/>
+            <date key="time:endTime" value="25"/>
+            <date key="time:duration" value="8"/>
+            <int key="bpmn:instance" value="1"/>
+        </event>
+        <event>
+            <string key="bpmn:type" value="StandBy"/>
+            <string key="bpmn:id" value="Activity_1ye848i"/>
+            <string key="bpmn:execution" value="4"/>
+            <date key="time:timestamp" value="13"/>
+            <date key="time:endTime" value="25"/>
+            <date key="time:duration" value="12"/>
+            <int key="bpmn:instance" value="1"/>
+        </event>
+        <event>
+            <string key="bpmn:type" value="bpmn:SendTask"/>
+            <string key="bpmn:name" value="Send Request"/>
+            <string key="bpmn:id" value="Activity_1ye848i"/>
+            <string key="bpmn:messageDestiny" value="Activity_0lu3j8v"/>
+            <string key="bpmn:userTask" value="client1"/>
+            <int key="bpmn:execution" value="4"/>
+            <int key="bpmn:time" value="13"/>
+            <string key="bpmn:subTask" value="Activity_1qu0c6s"/>
+            <date key="time:timestamp" value="25"/>
+            <int key="bpmn:instance" value="1"/>
+        </event>
+        <event>
+            <string key="bpmn:type" value="bpmn:ReceiveTask"/>
+            <string key="bpmn:name" value="Recieve Ludoteca Request"/>
+            <string key="bpmn:id" value="Activity_0lu3j8v"/>
+            <string key="bpmn:messageOrigin" value="Activity_1ye848i"/>
+            <string key="bpmn:userTask" value="administrative2"/>
+            <int key="bpmn:execution" value="2"/>
+            <int key="bpmn:time" value="14"/>
+            <string key="bpmn:subTask" value="Activity_08pkgdt"/>
+            <date key="time:timestamp" value="25"/>
+            <int key="bpmn:instance" value="1"/>
+        </event>
+        <event>
+            <string key="bpmn:type" value="StandByMessage"/>
+            <string key="bpmn:id" value="Activity_0lu3j8v"/>
+            <string key="bpmn:execution" value="3"/>
+            <date key="time:timestamp" value="17"/>
+            <date key="time:endTime" value="26"/>
+            <date key="time:duration" value="9"/>
+            <int key="bpmn:instance" value="1"/>
+        </event>
+        <event>
+            <string key="bpmn:type" value="StandBy"/>
+            <string key="bpmn:id" value="Activity_1ye848i"/>
+            <string key="bpmn:execution" value="5"/>
+            <date key="time:timestamp" value="13"/>
+            <date key="time:endTime" value="26"/>
+            <date key="time:duration" value="13"/>
+            <int key="bpmn:instance" value="1"/>
+        </event>
+        <event>
+            <string key="bpmn:type" value="bpmn:SendTask"/>
+            <string key="bpmn:name" value="Send Request"/>
+            <string key="bpmn:id" value="Activity_1ye848i"/>
+            <string key="bpmn:messageDestiny" value="Activity_0lu3j8v"/>
+            <string key="bpmn:userTask" value="client3"/>
+            <int key="bpmn:execution" value="5"/>
+            <int key="bpmn:time" value="11"/>
+            <string key="bpmn:subTask" value="Activity_1qu0c6s"/>
+            <date key="time:timestamp" value="26"/>
+            <int key="bpmn:instance" value="1"/>
+        </event>
+        <event>
+            <string key="bpmn:type" value="bpmn:ReceiveTask"/>
+            <string key="bpmn:name" value="Recieve Ludoteca Request"/>
+            <string key="bpmn:id" value="Activity_0lu3j8v"/>
+            <string key="bpmn:messageOrigin" value="Activity_1ye848i"/>
+            <string key="bpmn:userTask" value="administrative3"/>
+            <int key="bpmn:execution" value="3"/>
+            <int key="bpmn:time" value="14"/>
+            <string key="bpmn:subTask" value="Activity_08pkgdt"/>
+            <date key="time:timestamp" value="26"/>
+            <int key="bpmn:instance" value="1"/>
+        </event>
+        <event>
+            <string key="bpmn:type" value="StandByMessage"/>
+            <string key="bpmn:id" value="Activity_0lu3j8v"/>
+            <string key="bpmn:execution" value="1"/>
+            <date key="time:timestamp" value="17"/>
+            <date key="time:endTime" value="32"/>
+            <date key="time:duration" value="15"/>
+            <int key="bpmn:instance" value="1"/>
+        </event>
+        <event>
+            <string key="bpmn:type" value="StandBy"/>
+            <string key="bpmn:id" value="Activity_1ye848i"/>
+            <string key="bpmn:execution" value="6"/>
+            <date key="time:timestamp" value="13"/>
+            <date key="time:endTime" value="32"/>
+            <date key="time:duration" value="19"/>
+            <int key="bpmn:instance" value="1"/>
+        </event>
+        <event>
+            <string key="bpmn:type" value="bpmn:SendTask"/>
+            <string key="bpmn:name" value="Send Request"/>
+            <string key="bpmn:id" value="Activity_1ye848i"/>
+            <string key="bpmn:messageDestiny" value="Activity_0lu3j8v"/>
+            <string key="bpmn:userTask" value="clien2"/>
+            <int key="bpmn:execution" value="6"/>
+            <int key="bpmn:time" value="14"/>
+            <string key="bpmn:subTask" value="Activity_1qu0c6s"/>
+            <date key="time:timestamp" value="32"/>
+            <int key="bpmn:instance" value="1"/>
+        </event>
+        <event>
+            <string key="bpmn:type" value="bpmn:ReceiveTask"/>
+            <string key="bpmn:name" value="Recieve Ludoteca Request"/>
+            <string key="bpmn:id" value="Activity_0lu3j8v"/>
+            <string key="bpmn:messageOrigin" value="Activity_1ye848i"/>
+            <string key="bpmn:userTask" value="administrative1"/>
+            <int key="bpmn:execution" value="1"/>
+            <int key="bpmn:time" value="17"/>
+            <string key="bpmn:subTask" value="Activity_08pkgdt"/>
+            <date key="time:timestamp" value="32"/>
+            <int key="bpmn:instance" value="1"/>
+        </event>
+        <event>
+            <string key="bpmn:type" value="StandByMessage"/>
+            <string key="bpmn:id" value="Activity_0lu3j8v"/>
+            <string key="bpmn:execution" value="5"/>
+            <date key="time:timestamp" value="17"/>
+            <date key="time:endTime" value="37"/>
+            <date key="time:duration" value="20"/>
+            <int key="bpmn:instance" value="1"/>
+        </event>
+        <event>
+            <string key="bpmn:type" value="StandByMessage"/>
+            <string key="bpmn:id" value="Activity_0lu3j8v"/>
+            <string key="bpmn:execution" value="4"/>
+            <date key="time:timestamp" value="17"/>
+            <date key="time:endTime" value="38"/>
+            <date key="time:duration" value="21"/>
+            <int key="bpmn:instance" value="1"/>
+        </event>
+        <event>
+            <string key="bpmn:type" value="StandBy"/>
+            <string key="bpmn:id" value="Activity_0lu3j8v"/>
+            <string key="bpmn:execution" value="4"/>
+            <date key="time:timestamp" value="38"/>
+            <date key="time:endTime" value="39"/>
+            <date key="time:duration" value="1"/>
+            <int key="bpmn:instance" value="1"/>
+        </event>
+        <event>
+            <string key="bpmn:type" value="bpmn:ReceiveTask"/>
+            <string key="bpmn:name" value="Recieve Ludoteca Request"/>
+            <string key="bpmn:id" value="Activity_0lu3j8v"/>
+            <string key="bpmn:messageOrigin" value="Activity_1ye848i"/>
+            <string key="bpmn:userTask" value="administrative2"/>
+            <int key="bpmn:execution" value="4"/>
+            <int key="bpmn:time" value="16"/>
+            <string key="bpmn:subTask" value="Activity_08pkgdt"/>
+            <date key="time:timestamp" value="39"/>
+            <int key="bpmn:instance" value="1"/>
+        </event>
+        <event>
+            <string key="bpmn:type" value="StandBy"/>
+            <string key="bpmn:id" value="Activity_0lu3j8v"/>
+            <string key="bpmn:execution" value="5"/>
+            <date key="time:timestamp" value="37"/>
+            <date key="time:endTime" value="40"/>
+            <date key="time:duration" value="3"/>
+            <int key="bpmn:instance" value="1"/>
+        </event>
+        <event>
+            <string key="bpmn:type" value="bpmn:ReceiveTask"/>
+            <string key="bpmn:name" value="Recieve Ludoteca Request"/>
+            <string key="bpmn:id" value="Activity_0lu3j8v"/>
+            <string key="bpmn:messageOrigin" value="Activity_1ye848i"/>
+            <string key="bpmn:userTask" value="administrative3"/>
+            <int key="bpmn:execution" value="5"/>
+            <int key="bpmn:time" value="15"/>
+            <string key="bpmn:subTask" value="Activity_08pkgdt"/>
+            <date key="time:timestamp" value="40"/>
+            <int key="bpmn:instance" value="1"/>
+        </event>
+        <event>
+            <string key="bpmn:type" value="StandByMessage"/>
+            <string key="bpmn:id" value="Activity_0lu3j8v"/>
+            <string key="bpmn:execution" value="6"/>
+            <date key="time:timestamp" value="17"/>
+            <date key="time:endTime" value="46"/>
+            <date key="time:duration" value="29"/>
+            <int key="bpmn:instance" value="1"/>
+        </event>
+        <event>
+            <string key="bpmn:type" value="StandBy"/>
+            <string key="bpmn:id" value="Activity_0lu3j8v"/>
+            <string key="bpmn:execution" value="6"/>
+            <date key="time:timestamp" value="46"/>
+            <date key="time:endTime" value="49"/>
+            <date key="time:duration" value="3"/>
+            <int key="bpmn:instance" value="1"/>
+        </event>
+        <event>
+            <string key="bpmn:type" value="bpmn:ReceiveTask"/>
+            <string key="bpmn:name" value="Recieve Ludoteca Request"/>
+            <string key="bpmn:id" value="Activity_0lu3j8v"/>
+            <string key="bpmn:messageOrigin" value="Activity_1ye848i"/>
+            <string key="bpmn:userTask" value="administrative1"/>
+            <int key="bpmn:execution" value="6"/>
+            <int key="bpmn:time" value="16"/>
+            <string key="bpmn:subTask" value="Activity_08pkgdt"/>
+            <date key="time:timestamp" value="49"/>
+            <int key="bpmn:instance" value="1"/>
+        </event>
+        <event>
+            <string key="bpmn:type" value="bpmn:UserTask"/>
+            <string key="bpmn:name" value="Assess the Request"/>
+            <string key="bpmn:id" value="Activity_08pkgdt"/>
+            <string key="bpmn:userTask" value="commitee2"/>
+            <int key="bpmn:execution" value="1"/>
+            <int key="bpmn:time" value="17"/>
+            <string key="bpmn:subTask" value="Activity_0mbqo4h"/>
+            <date key="time:timestamp" value="65"/>
+            <int key="bpmn:instance" value="1"/>
+        </event>
+        <event>
+            <string key="bpmn:type" value="bpmn:Task"/>
+            <string key="bpmn:name" value="Public the resolution"/>
+            <string key="bpmn:id" value="Activity_0mbqo4h"/>
+            <string key="bpmn:userTask" value="administrative2"/>
+            <int key="bpmn:execution" value="1"/>
+            <int key="bpmn:time" value="12"/>
+            <string key="bpmn:subTask" value="Activity_0chu488"/>
+            <date key="time:timestamp" value="82"/>
+            <int key="bpmn:instance" value="1"/>
+        </event>
+        <event>
+            <string key="bpmn:type" value="bpmn:SendTask"/>
+            <string key="bpmn:name" value="Inform about resolution"/>
+            <string key="bpmn:id" value="Activity_0chu488"/>
+            <string key="bpmn:messageDestiny" value="Activity_1qu0c6s"/>
+            <string key="bpmn:userTask" value="administrative3"/>
+            <int key="bpmn:execution" value="1"/>
+            <int key="bpmn:time" value="12"/>
+            <string key="bpmn:subTask" value="Activity_0xuu3c1"/>
+            <date key="time:timestamp" value="94"/>
+            <int key="bpmn:instance" value="1"/>
+        </event>
+        <event>
+            <string key="bpmn:type" value="StandByMessage"/>
+            <string key="bpmn:id" value="Activity_1qu0c6s"/>
+            <string key="bpmn:execution" value="1"/>
+            <date key="time:timestamp" value="46"/>
+            <date key="time:endTime" value="106"/>
+            <date key="time:duration" value="60"/>
+            <int key="bpmn:instance" value="1"/>
+        </event>
+        <event>
+            <string key="bpmn:type" value="bpmn:ReceiveTask"/>
+            <string key="bpmn:name" value="Recieve information"/>
+            <string key="bpmn:id" value="Activity_1qu0c6s"/>
+            <string key="bpmn:messageOrigin" value="Activity_0chu488"/>
+            <string key="bpmn:userTask" value="client1"/>
+            <int key="bpmn:execution" value="1"/>
+            <int key="bpmn:time" value="16"/>
+            <string key="bpmn:subTask" value="Activity_0mr2w9y"/>
+            <date key="time:timestamp" value="106"/>
+            <int key="bpmn:instance" value="1"/>
+        </event>
+        <event>
+            <string key="bpmn:type" value="bpmn:SendTask"/>
+            <string key="bpmn:name" value="Inform about resolution"/>
+            <string key="bpmn:id" value="Activity_0chu488"/>
+            <string key="bpmn:messageDestiny" value="Activity_1qu0c6s"/>
+            <string key="bpmn:userTask" value="administrative1"/>
+            <int key="bpmn:execution" value="2"/>
+            <int key="bpmn:time" value="16"/>
+            <string key="bpmn:subTask" value="Activity_0xuu3c1"/>
+            <date key="time:timestamp" value="106"/>
+            <int key="bpmn:instance" value="1"/>
+        </event>
+        <event>
+            <string key="bpmn:type" value="StandBy"/>
+            <string key="bpmn:id" value="Activity_0mr2w9y"/>
+            <string key="bpmn:execution" value="1"/>
+            <date key="time:timestamp" value="122"/>
+            <date key="time:endTime" value="140"/>
+            <date key="time:duration" value="18"/>
+            <int key="bpmn:instance" value="1"/>
+        </event>
+        <event>
+            <string key="bpmn:type" value="bpmn:Task"/>
+            <string key="bpmn:name" value="Parents want to claim?"/>
+            <string key="bpmn:id" value="Activity_0mr2w9y"/>
+            <string key="bpmn:userTask" value="clien2"/>
+            <int key="bpmn:execution" value="1"/>
+            <int key="bpmn:time" value="14"/>
+            <string key="bpmn:subTask" value="Gateway_19f6z5h"/>
+            <date key="time:timestamp" value="140"/>
+            <int key="bpmn:instance" value="1"/>
+        </event>
+        <event>
+            <string key="bpmn:type" value="bpmn:ExclusiveGateway"/>
+            <string key="bpmn:name" value="Unnamed"/>
+            <string key="bpmn:id" value="Gateway_19f6z5h"/>
+            <string key="bpmn:subTask" value="Activity_1yfb3ln"/>
+            <date key="time:timestamp" value="154"/>
+            <int key="bpmn:instance" value="1"/>
+        </event>
+        <event>
+            <string key="bpmn:type" value="bpmn:Task"/>
+            <string key="bpmn:name" value="Offset or claim the decision"/>
+            <string key="bpmn:id" value="Activity_1yfb3ln"/>
+            <string key="bpmn:userTask" value="client3"/>
+            <int key="bpmn:execution" value="1"/>
+            <int key="bpmn:time" value="13"/>
+            <string key="bpmn:subTask" value="Gateway_00ouu2n"/>
+            <date key="time:timestamp" value="154"/>
+            <int key="bpmn:instance" value="1"/>
+        </event>
+        <event>
+            <string key="bpmn:type" value="bpmn:ExclusiveGateway"/>
+            <string key="bpmn:name" value="Unnamed"/>
+            <string key="bpmn:id" value="Gateway_00ouu2n"/>
+            <string key="bpmn:subTask" value="Activity_07boq00"/>
+            <date key="time:timestamp" value="167"/>
+            <int key="bpmn:instance" value="1"/>
+        </event>
+        <event>
+            <string key="bpmn:type" value="bpmn:SendTask"/>
+            <string key="bpmn:name" value="Send documentation"/>
+            <string key="bpmn:id" value="Activity_07boq00"/>
+            <string key="bpmn:messageDestiny" value="Activity_0xuu3c1"/>
+            <string key="bpmn:userTask" value="client1"/>
+            <int key="bpmn:execution" value="1"/>
+            <int key="bpmn:time" value="16"/>
+            <string key="bpmn:subTask" value="Activity_1x6iqxc"/>
+            <date key="time:timestamp" value="167"/>
+            <int key="bpmn:instance" value="1"/>
+        </event>
+        <event>
+            <string key="bpmn:type" value="StandByMessage"/>
+            <string key="bpmn:id" value="Activity_0xuu3c1"/>
+            <string key="bpmn:execution" value="1"/>
+            <date key="time:timestamp" value="122"/>
+            <date key="time:endTime" value="183"/>
+            <date key="time:duration" value="61"/>
+            <int key="bpmn:instance" value="1"/>
+        </event>
+        <event>
+            <string key="bpmn:type" value="bpmn:ReceiveTask"/>
+            <string key="bpmn:name" value="Recieve documentation"/>
+            <string key="bpmn:id" value="Activity_0xuu3c1"/>
+            <string key="bpmn:messageOrigin" value="Activity_07boq00"/>
+            <string key="bpmn:userTask" value="administrative3"/>
+            <int key="bpmn:execution" value="1"/>
+            <int key="bpmn:time" value="10"/>
+            <string key="bpmn:subTask" value="Activity_19xnx7n"/>
+            <date key="time:timestamp" value="183"/>
+            <int key="bpmn:instance" value="1"/>
+        </event>
+        <event>
+            <string key="bpmn:type" value="bpmn:SendTask"/>
+            <string key="bpmn:name" value="Send documentation"/>
+            <string key="bpmn:id" value="Activity_07boq00"/>
+            <string key="bpmn:messageDestiny" value="Activity_0xuu3c1"/>
+            <string key="bpmn:userTask" value="client3"/>
+            <int key="bpmn:execution" value="2"/>
+            <int key="bpmn:time" value="18"/>
+            <string key="bpmn:subTask" value="Activity_1x6iqxc"/>
+            <date key="time:timestamp" value="183"/>
+            <int key="bpmn:instance" value="1"/>
+        </event>
+        <event>
+            <string key="bpmn:type" value="StandByMessage"/>
+            <string key="bpmn:id" value="Activity_0xuu3c1"/>
+            <string key="bpmn:execution" value="2"/>
+            <date key="time:timestamp" value="193"/>
+            <date key="time:endTime" value="201"/>
+            <date key="time:duration" value="8"/>
+            <int key="bpmn:instance" value="1"/>
+        </event>
+        <event>
+            <string key="bpmn:type" value="bpmn:ReceiveTask"/>
+            <string key="bpmn:name" value="Recieve documentation"/>
+            <string key="bpmn:id" value="Activity_0xuu3c1"/>
+            <string key="bpmn:messageOrigin" value="Activity_07boq00"/>
+            <string key="bpmn:userTask" value="administrative2"/>
+            <int key="bpmn:execution" value="2"/>
+            <int key="bpmn:time" value="10"/>
+            <string key="bpmn:subTask" value="Activity_19xnx7n"/>
+            <date key="time:timestamp" value="201"/>
+            <int key="bpmn:instance" value="1"/>
+        </event>
+        <event>
+            <string key="bpmn:type" value="bpmn:SendTask"/>
+            <string key="bpmn:name" value="Send documentation"/>
+            <string key="bpmn:id" value="Activity_07boq00"/>
+            <string key="bpmn:messageDestiny" value="Activity_0xuu3c1"/>
+            <string key="bpmn:userTask" value="clien2"/>
+            <int key="bpmn:execution" value="3"/>
+            <int key="bpmn:time" value="15"/>
+            <string key="bpmn:subTask" value="Activity_1x6iqxc"/>
+            <date key="time:timestamp" value="201"/>
+            <int key="bpmn:instance" value="1"/>
+        </event>
+        <event>
+            <string key="bpmn:type" value="StandByMessage"/>
+            <string key="bpmn:id" value="Activity_0xuu3c1"/>
+            <string key="bpmn:execution" value="3"/>
+            <date key="time:timestamp" value="211"/>
+            <date key="time:endTime" value="216"/>
+            <date key="time:duration" value="5"/>
+            <int key="bpmn:instance" value="1"/>
+        </event>
+        <event>
+            <string key="bpmn:type" value="bpmn:ReceiveTask"/>
+            <string key="bpmn:name" value="Recieve documentation"/>
+            <string key="bpmn:id" value="Activity_0xuu3c1"/>
+            <string key="bpmn:messageOrigin" value="Activity_07boq00"/>
+            <string key="bpmn:userTask" value="administrative1"/>
+            <int key="bpmn:execution" value="3"/>
+            <int key="bpmn:time" value="10"/>
+            <string key="bpmn:subTask" value="Activity_19xnx7n"/>
+            <date key="time:timestamp" value="216"/>
+            <int key="bpmn:instance" value="1"/>
+        </event>
+        <event>
+            <string key="bpmn:type" value="bpmn:SendTask"/>
+            <string key="bpmn:name" value="Send documentation"/>
+            <string key="bpmn:id" value="Activity_07boq00"/>
+            <string key="bpmn:messageDestiny" value="Activity_0xuu3c1"/>
+            <string key="bpmn:userTask" value="client3"/>
+            <int key="bpmn:execution" value="4"/>
+            <int key="bpmn:time" value="14"/>
+            <string key="bpmn:subTask" value="Activity_1x6iqxc"/>
+            <date key="time:timestamp" value="216"/>
+            <int key="bpmn:instance" value="1"/>
+        </event>
+        <event>
+            <string key="bpmn:type" value="StandByMessage"/>
+            <string key="bpmn:id" value="Activity_0xuu3c1"/>
+            <string key="bpmn:execution" value="4"/>
+            <date key="time:timestamp" value="226"/>
+            <date key="time:endTime" value="230"/>
+            <date key="time:duration" value="4"/>
+            <int key="bpmn:instance" value="1"/>
+        </event>
+        <event>
+            <string key="bpmn:type" value="bpmn:ReceiveTask"/>
+            <string key="bpmn:name" value="Recieve documentation"/>
+            <string key="bpmn:id" value="Activity_0xuu3c1"/>
+            <string key="bpmn:messageOrigin" value="Activity_07boq00"/>
+            <string key="bpmn:userTask" value="administrative2"/>
+            <int key="bpmn:execution" value="4"/>
+            <int key="bpmn:time" value="10"/>
+            <string key="bpmn:subTask" value="Activity_19xnx7n"/>
+            <date key="time:timestamp" value="230"/>
+            <int key="bpmn:instance" value="1"/>
+        </event>
+        <event>
+            <string key="bpmn:type" value="bpmn:SendTask"/>
+            <string key="bpmn:name" value="Send documentation"/>
+            <string key="bpmn:id" value="Activity_07boq00"/>
+            <string key="bpmn:messageDestiny" value="Activity_0xuu3c1"/>
+            <string key="bpmn:userTask" value="client1"/>
+            <int key="bpmn:execution" value="5"/>
+            <int key="bpmn:time" value="14"/>
+            <string key="bpmn:subTask" value="Activity_1x6iqxc"/>
+            <date key="time:timestamp" value="230"/>
+            <int key="bpmn:instance" value="1"/>
+        </event>
+        <event>
+            <string key="bpmn:type" value="StandByMessage"/>
+            <string key="bpmn:id" value="Activity_0xuu3c1"/>
+            <string key="bpmn:execution" value="5"/>
+            <date key="time:timestamp" value="240"/>
+            <date key="time:endTime" value="244"/>
+            <date key="time:duration" value="4"/>
+            <int key="bpmn:instance" value="1"/>
+        </event>
+        <event>
+            <string key="bpmn:type" value="bpmn:ReceiveTask"/>
+            <string key="bpmn:name" value="Recieve documentation"/>
+            <string key="bpmn:id" value="Activity_0xuu3c1"/>
+            <string key="bpmn:messageOrigin" value="Activity_07boq00"/>
+            <string key="bpmn:userTask" value="administrative3"/>
+            <int key="bpmn:execution" value="5"/>
+            <int key="bpmn:time" value="10"/>
+            <string key="bpmn:subTask" value="Activity_19xnx7n"/>
+            <date key="time:timestamp" value="244"/>
+            <int key="bpmn:instance" value="1"/>
+        </event>
+        <event>
+            <string key="bpmn:type" value="bpmn:SendTask"/>
+            <string key="bpmn:name" value="Send documentation"/>
+            <string key="bpmn:id" value="Activity_07boq00"/>
+            <string key="bpmn:messageDestiny" value="Activity_0xuu3c1"/>
+            <string key="bpmn:userTask" value="clien2"/>
+            <int key="bpmn:execution" value="6"/>
+            <int key="bpmn:time" value="14"/>
+            <string key="bpmn:subTask" value="Activity_1x6iqxc"/>
+            <date key="time:timestamp" value="244"/>
+            <int key="bpmn:instance" value="1"/>
+        </event>
+        <event>
+            <string key="bpmn:type" value="StandByMessage"/>
+            <string key="bpmn:id" value="Activity_0xuu3c1"/>
+            <string key="bpmn:execution" value="6"/>
+            <date key="time:timestamp" value="254"/>
+            <date key="time:endTime" value="258"/>
+            <date key="time:duration" value="4"/>
+            <int key="bpmn:instance" value="1"/>
+        </event>
+        <event>
+            <string key="bpmn:type" value="bpmn:ReceiveTask"/>
+            <string key="bpmn:name" value="Recieve documentation"/>
+            <string key="bpmn:id" value="Activity_0xuu3c1"/>
+            <string key="bpmn:messageOrigin" value="Activity_07boq00"/>
+            <string key="bpmn:userTask" value="administrative2"/>
+            <int key="bpmn:execution" value="6"/>
+            <int key="bpmn:time" value="9"/>
+            <string key="bpmn:subTask" value="Activity_19xnx7n"/>
+            <date key="time:timestamp" value="258"/>
+            <int key="bpmn:instance" value="1"/>
+        </event>
+        <event>
+            <string key="bpmn:type" value="bpmn:Task"/>
+            <string key="bpmn:name" value="Reevalute documentation"/>
+            <string key="bpmn:id" value="Activity_19xnx7n"/>
+            <string key="bpmn:userTask" value="commitee2"/>
+            <int key="bpmn:execution" value="1"/>
+            <int key="bpmn:time" value="18"/>
+            <string key="bpmn:subTask" value="Activity_0c03ghp"/>
+            <date key="time:timestamp" value="267"/>
+            <int key="bpmn:instance" value="1"/>
+        </event>
+        <event>
+            <string key="bpmn:type" value="bpmn:Task"/>
+            <string key="bpmn:name" value="Public the final list"/>
+            <string key="bpmn:id" value="Activity_0c03ghp"/>
+            <string key="bpmn:userTask" value="administrative2"/>
+            <int key="bpmn:execution" value="1"/>
+            <int key="bpmn:time" value="14"/>
+            <string key="bpmn:subTask" value="Activity_0dd9m33"/>
+            <date key="time:timestamp" value="285"/>
+            <int key="bpmn:instance" value="1"/>
+        </event>
+        <event>
+            <string key="bpmn:type" value="bpmn:SendTask"/>
+            <string key="bpmn:name" value="Inform about resolution"/>
+            <string key="bpmn:id" value="Activity_0dd9m33"/>
+            <string key="bpmn:messageDestiny" value="Activity_1x6iqxc"/>
+            <string key="bpmn:userTask" value="administrative1"/>
+            <int key="bpmn:execution" value="1"/>
+            <int key="bpmn:time" value="18"/>
+            <string key="bpmn:subTask" value="Activity_06cj315"/>
+            <date key="time:timestamp" value="299"/>
+            <int key="bpmn:instance" value="1"/>
+        </event>
+        <event>
+            <string key="bpmn:type" value="StandByMessage"/>
+            <string key="bpmn:id" value="Activity_1x6iqxc"/>
+            <string key="bpmn:execution" value="1"/>
+            <date key="time:timestamp" value="258"/>
+            <date key="time:endTime" value="317"/>
+            <date key="time:duration" value="59"/>
+            <int key="bpmn:instance" value="1"/>
+        </event>
+        <event>
+            <string key="bpmn:type" value="bpmn:ReceiveTask"/>
+            <string key="bpmn:name" value="Recieve the resolution"/>
+            <string key="bpmn:id" value="Activity_1x6iqxc"/>
+            <string key="bpmn:messageOrigin" value="Activity_0dd9m33"/>
+            <string key="bpmn:userTask" value="clien2"/>
+            <int key="bpmn:execution" value="1"/>
+            <int key="bpmn:time" value="16"/>
+            <string key="bpmn:subTask" value="Activity_0i8kz5y"/>
+            <date key="time:timestamp" value="317"/>
+            <int key="bpmn:instance" value="1"/>
+        </event>
+        <event>
+            <string key="bpmn:type" value="bpmn:SendTask"/>
+            <string key="bpmn:name" value="Inform about resolution"/>
+            <string key="bpmn:id" value="Activity_0dd9m33"/>
+            <string key="bpmn:messageDestiny" value="Activity_1x6iqxc"/>
+            <string key="bpmn:userTask" value="administrative1"/>
+            <int key="bpmn:execution" value="2"/>
+            <int key="bpmn:time" value="16"/>
+            <string key="bpmn:subTask" value="Activity_06cj315"/>
+            <date key="time:timestamp" value="317"/>
+            <int key="bpmn:instance" value="1"/>
+        </event>
+        <event>
+            <string key="bpmn:type" value="bpmn:SendTask"/>
+            <string key="bpmn:name" value="Make the payment"/>
+            <string key="bpmn:id" value="Activity_0i8kz5y"/>
+            <string key="bpmn:messageDestiny" value="Activity_06cj315"/>
+            <string key="bpmn:userTask" value="client1"/>
+            <int key="bpmn:execution" value="1"/>
+            <int key="bpmn:time" value="17"/>
+            <string key="bpmn:subTask" value="Event_1bppajv"/>
+            <date key="time:timestamp" value="333"/>
+            <int key="bpmn:instance" value="1"/>
+        </event>
+        <event>
+            <string key="bpmn:type" value="StandByMessage"/>
+            <string key="bpmn:id" value="Activity_06cj315"/>
+            <string key="bpmn:execution" value="1"/>
+            <date key="time:timestamp" value="333"/>
+            <date key="time:endTime" value="350"/>
+            <date key="time:duration" value="17"/>
+            <int key="bpmn:instance" value="1"/>
+        </event>
+        <event>
+            <string key="bpmn:type" value="bpmn:ReceiveTask"/>
+            <string key="bpmn:name" value="Recieve payment"/>
+            <string key="bpmn:id" value="Activity_06cj315"/>
+            <string key="bpmn:messageOrigin" value="Activity_0i8kz5y"/>
+            <string key="bpmn:userTask" value="administrative3"/>
+            <int key="bpmn:execution" value="1"/>
+            <int key="bpmn:time" value="16"/>
+            <string key="bpmn:subTask" value="Event_15940v7"/>
+            <date key="time:timestamp" value="350"/>
+            <int key="bpmn:instance" value="1"/>
+        </event>
+        <event>
+            <string key="bpmn:type" value="bpmn:SendTask"/>
+            <string key="bpmn:name" value="Make the payment"/>
+            <string key="bpmn:id" value="Activity_0i8kz5y"/>
+            <string key="bpmn:messageDestiny" value="Activity_06cj315"/>
+            <string key="bpmn:userTask" value="client3"/>
+            <int key="bpmn:execution" value="2"/>
+            <int key="bpmn:time" value="16"/>
+            <string key="bpmn:subTask" value="Event_1bppajv"/>
+            <date key="time:timestamp" value="350"/>
+            <int key="bpmn:instance" value="1"/>
+        </event>
+        <event>
+            <string key="bpmn:type" value="bpmn:ReceiveTask"/>
+            <string key="bpmn:name" value="Recieve payment"/>
+            <string key="bpmn:id" value="Activity_06cj315"/>
+            <string key="bpmn:messageOrigin" value="Activity_0i8kz5y"/>
+            <string key="bpmn:userTask" value="administrative2"/>
+            <int key="bpmn:execution" value="2"/>
+            <int key="bpmn:time" value="11"/>
+            <string key="bpmn:subTask" value="Event_15940v7"/>
+            <date key="time:timestamp" value="366"/>
+            <int key="bpmn:instance" value="1"/>
+        </event>
+        <event>
+            <string key="bpmn:type" value="bpmn:SendTask"/>
+            <string key="bpmn:name" value="Make the payment"/>
+            <string key="bpmn:id" value="Activity_0i8kz5y"/>
+            <string key="bpmn:messageDestiny" value="Activity_06cj315"/>
+            <string key="bpmn:userTask" value="clien2"/>
+            <int key="bpmn:execution" value="3"/>
+            <int key="bpmn:time" value="16"/>
+            <string key="bpmn:subTask" value="Event_1bppajv"/>
+            <date key="time:timestamp" value="366"/>
+            <int key="bpmn:instance" value="1"/>
+        </event>
+        <event>
+            <string key="bpmn:type" value="StandByMessage"/>
+            <string key="bpmn:id" value="Activity_06cj315"/>
+            <string key="bpmn:execution" value="3"/>
+            <date key="time:timestamp" value="377"/>
+            <date key="time:endTime" value="382"/>
+            <date key="time:duration" value="5"/>
+            <int key="bpmn:instance" value="1"/>
+        </event>
+        <event>
+            <string key="bpmn:type" value="bpmn:ReceiveTask"/>
+            <string key="bpmn:name" value="Recieve payment"/>
+            <string key="bpmn:id" value="Activity_06cj315"/>
+            <string key="bpmn:messageOrigin" value="Activity_0i8kz5y"/>
+            <string key="bpmn:userTask" value="administrative1"/>
+            <int key="bpmn:execution" value="3"/>
+            <int key="bpmn:time" value="17"/>
+            <string key="bpmn:subTask" value="Event_15940v7"/>
+            <date key="time:timestamp" value="382"/>
+            <int key="bpmn:instance" value="1"/>
+        </event>
+        <event>
+            <string key="bpmn:type" value="bpmn:SendTask"/>
+            <string key="bpmn:name" value="Make the payment"/>
+            <string key="bpmn:id" value="Activity_0i8kz5y"/>
+            <string key="bpmn:messageDestiny" value="Activity_06cj315"/>
+            <string key="bpmn:userTask" value="clien2"/>
+            <int key="bpmn:execution" value="4"/>
+            <int key="bpmn:time" value="16"/>
+            <string key="bpmn:subTask" value="Event_1bppajv"/>
+            <date key="time:timestamp" value="382"/>
+            <int key="bpmn:instance" value="1"/>
+        </event>
+        <event>
+            <string key="bpmn:type" value="bpmn:SendTask"/>
+            <string key="bpmn:name" value="Make the payment"/>
+            <string key="bpmn:id" value="Activity_0i8kz5y"/>
+            <string key="bpmn:messageDestiny" value="Activity_06cj315"/>
+            <string key="bpmn:userTask" value="client3"/>
+            <int key="bpmn:execution" value="5"/>
+            <int key="bpmn:time" value="13"/>
+            <string key="bpmn:subTask" value="Event_1bppajv"/>
+            <date key="time:timestamp" value="398"/>
+            <int key="bpmn:instance" value="1"/>
+        </event>
+        <event>
+            <string key="bpmn:type" value="bpmn:ReceiveTask"/>
+            <string key="bpmn:name" value="Recieve payment"/>
+            <string key="bpmn:id" value="Activity_06cj315"/>
+            <string key="bpmn:messageOrigin" value="Activity_0i8kz5y"/>
+            <string key="bpmn:userTask" value="administrative3"/>
+            <int key="bpmn:execution" value="4"/>
+            <int key="bpmn:time" value="16"/>
+            <string key="bpmn:subTask" value="Event_15940v7"/>
+            <date key="time:timestamp" value="399"/>
+            <int key="bpmn:instance" value="1"/>
+        </event>
+        <event>
+            <string key="bpmn:type" value="bpmn:SendTask"/>
+            <string key="bpmn:name" value="Make the payment"/>
+            <string key="bpmn:id" value="Activity_0i8kz5y"/>
+            <string key="bpmn:messageDestiny" value="Activity_06cj315"/>
+            <string key="bpmn:userTask" value="clien2"/>
+            <int key="bpmn:execution" value="6"/>
+            <int key="bpmn:time" value="14"/>
+            <string key="bpmn:subTask" value="Event_1bppajv"/>
+            <date key="time:timestamp" value="411"/>
+            <int key="bpmn:instance" value="1"/>
+        </event>
+        <event>
+            <string key="bpmn:type" value="bpmn:ReceiveTask"/>
+            <string key="bpmn:name" value="Recieve payment"/>
+            <string key="bpmn:id" value="Activity_06cj315"/>
+            <string key="bpmn:messageOrigin" value="Activity_0i8kz5y"/>
+            <string key="bpmn:userTask" value="administrative2"/>
+            <int key="bpmn:execution" value="5"/>
+            <int key="bpmn:time" value="13"/>
+            <string key="bpmn:subTask" value="Event_15940v7"/>
+            <date key="time:timestamp" value="415"/>
+            <int key="bpmn:instance" value="1"/>
+        </event>
+        <event>
+            <string key="bpmn:type" value="bpmn:EndEvent"/>
+            <string key="bpmn:name" value="Unnamed"/>
+            <string key="bpmn:id" value="Event_1bppajv"/>
+            <string key="bpmn:subTask" value=""/>
+            <date key="time:timestamp" value="425"/>
+            <int key="bpmn:instance" value="1"/>
+        </event>
+        <event>
+            <string key="bpmn:type" value="bpmn:ReceiveTask"/>
+            <string key="bpmn:name" value="Recieve payment"/>
+            <string key="bpmn:id" value="Activity_06cj315"/>
+            <string key="bpmn:messageOrigin" value="Activity_0i8kz5y"/>
+            <string key="bpmn:userTask" value="administrative3"/>
+            <int key="bpmn:execution" value="6"/>
+            <int key="bpmn:time" value="13"/>
+            <string key="bpmn:subTask" value="Event_15940v7"/>
+            <date key="time:timestamp" value="428"/>
+            <int key="bpmn:instance" value="1"/>
+        </event>
+        <event>
+            <string key="bpmn:type" value="bpmn:EndEvent"/>
+            <string key="bpmn:name" value="Unnamed"/>
+            <string key="bpmn:id" value="Event_15940v7"/>
+            <string key="bpmn:subTask" value=""/>
+            <date key="time:timestamp" value="441"/>
+            <int key="bpmn:instance" value="1"/>
+        </event>
+    </trace>
+    <trace>
+        <string key="concept:name" value="Instance 2"/>
+        <event>
+            <string key="bpmn:type" value="bpmn:StartEvent"/>
+            <string key="bpmn:name" value="Unnamed"/>
+            <string key="bpmn:id" value="Event_0564wj7"/>
+            <string key="bpmn:subTask" value="Activity_1yy0hi2"/>
+            <date key="time:timestamp" value="60"/>
+            <int key="bpmn:instance" value="2"/>
+        </event>
+        <event>
+            <string key="bpmn:type" value="bpmn:Task"/>
+            <string key="bpmn:name" value="Open a call for position in play centers"/>
+            <string key="bpmn:id" value="Activity_1yy0hi2"/>
+            <string key="bpmn:userTask" value="vicerector"/>
+            <int key="bpmn:execution" value="1"/>
+            <int key="bpmn:time" value="13"/>
+            <string key="bpmn:subTask" value="Activity_0lu3j8v"/>
+            <date key="time:timestamp" value="60"/>
+            <int key="bpmn:instance" value="2"/>
+        </event>
+        <event>
+            <string key="bpmn:type" value="bpmn:StartEvent"/>
+            <string key="bpmn:name" value="Unnamed"/>
+            <string key="bpmn:id" value="Event_19cvp47"/>
+            <string key="bpmn:subTask" value="Activity_0xkea5f"/>
+            <date key="time:timestamp" value="100"/>
+            <int key="bpmn:instance" value="2"/>
+        </event>
+        <event>
+            <string key="bpmn:type" value="bpmn:Task"/>
+            <string key="bpmn:name" value="Fill in the form"/>
+            <string key="bpmn:id" value="Activity_0xkea5f"/>
+            <string key="bpmn:userTask" value="clien2"/>
+            <int key="bpmn:execution" value="1"/>
+            <int key="bpmn:time" value="13"/>
+            <string key="bpmn:subTask" value="Activity_1ye848i"/>
+            <date key="time:timestamp" value="100"/>
+            <int key="bpmn:instance" value="2"/>
+        </event>
+        <event>
+            <string key="bpmn:type" value="bpmn:SendTask"/>
+            <string key="bpmn:name" value="Send Request"/>
+            <string key="bpmn:id" value="Activity_1ye848i"/>
+            <string key="bpmn:messageDestiny" value="Activity_0lu3j8v"/>
+            <string key="bpmn:userTask" value="client3"/>
+            <int key="bpmn:execution" value="1"/>
+            <int key="bpmn:time" value="13"/>
+            <string key="bpmn:subTask" value="Activity_1qu0c6s"/>
+            <date key="time:timestamp" value="113"/>
+            <int key="bpmn:instance" value="2"/>
+        </event>
+        <event>
+            <string key="bpmn:type" value="bpmn:SendTask"/>
+            <string key="bpmn:name" value="Send Request"/>
+            <string key="bpmn:id" value="Activity_1ye848i"/>
+            <string key="bpmn:messageDestiny" value="Activity_0lu3j8v"/>
+            <string key="bpmn:userTask" value="clien2"/>
+            <int key="bpmn:execution" value="2"/>
+            <int key="bpmn:time" value="14"/>
+            <string key="bpmn:subTask" value="Activity_1qu0c6s"/>
+            <date key="time:timestamp" value="113"/>
+            <int key="bpmn:instance" value="2"/>
+        </event>
+        <event>
+            <string key="bpmn:type" value="StandBy"/>
+            <string key="bpmn:id" value="Activity_1ye848i"/>
+            <string key="bpmn:execution" value="3"/>
+            <date key="time:timestamp" value="113"/>
+            <date key="time:endTime" value="122"/>
+            <date key="time:duration" value="9"/>
+            <int key="bpmn:instance" value="2"/>
+        </event>
+        <event>
+            <string key="bpmn:type" value="bpmn:SendTask"/>
+            <string key="bpmn:name" value="Send Request"/>
+            <string key="bpmn:id" value="Activity_1ye848i"/>
+            <string key="bpmn:messageDestiny" value="Activity_0lu3j8v"/>
+            <string key="bpmn:userTask" value="client1"/>
+            <int key="bpmn:execution" value="3"/>
+            <int key="bpmn:time" value="14"/>
+            <string key="bpmn:subTask" value="Activity_1qu0c6s"/>
+            <date key="time:timestamp" value="122"/>
+            <int key="bpmn:instance" value="2"/>
+        </event>
+        <event>
+            <string key="bpmn:type" value="StandByMessage"/>
+            <string key="bpmn:id" value="Activity_0lu3j8v"/>
+            <string key="bpmn:execution" value="1"/>
+            <date key="time:timestamp" value="73"/>
+            <date key="time:endTime" value="126"/>
+            <date key="time:duration" value="53"/>
+            <int key="bpmn:instance" value="2"/>
+        </event>
+        <event>
+            <string key="bpmn:type" value="bpmn:ReceiveTask"/>
+            <string key="bpmn:name" value="Recieve Ludoteca Request"/>
+            <string key="bpmn:id" value="Activity_0lu3j8v"/>
+            <string key="bpmn:messageOrigin" value="Activity_1ye848i"/>
+            <string key="bpmn:userTask" value="administrative2"/>
+            <int key="bpmn:execution" value="1"/>
+            <int key="bpmn:time" value="10"/>
+            <string key="bpmn:subTask" value="Activity_08pkgdt"/>
+            <date key="time:timestamp" value="126"/>
+            <int key="bpmn:instance" value="2"/>
+        </event>
+        <event>
+            <string key="bpmn:type" value="StandBy"/>
+            <string key="bpmn:id" value="Activity_1ye848i"/>
+            <string key="bpmn:execution" value="4"/>
+            <date key="time:timestamp" value="113"/>
+            <date key="time:endTime" value="126"/>
+            <date key="time:duration" value="13"/>
+            <int key="bpmn:instance" value="2"/>
+        </event>
+        <event>
+            <string key="bpmn:type" value="bpmn:SendTask"/>
+            <string key="bpmn:name" value="Send Request"/>
+            <string key="bpmn:id" value="Activity_1ye848i"/>
+            <string key="bpmn:messageDestiny" value="Activity_0lu3j8v"/>
+            <string key="bpmn:userTask" value="client3"/>
+            <int key="bpmn:execution" value="4"/>
+            <int key="bpmn:time" value="15"/>
+            <string key="bpmn:subTask" value="Activity_1qu0c6s"/>
+            <date key="time:timestamp" value="126"/>
+            <int key="bpmn:instance" value="2"/>
+        </event>
+        <event>
+            <string key="bpmn:type" value="StandByMessage"/>
+            <string key="bpmn:id" value="Activity_0lu3j8v"/>
+            <string key="bpmn:execution" value="2"/>
+            <date key="time:timestamp" value="73"/>
+            <date key="time:endTime" value="127"/>
+            <date key="time:duration" value="54"/>
+            <int key="bpmn:instance" value="2"/>
+        </event>
+        <event>
+            <string key="bpmn:type" value="bpmn:ReceiveTask"/>
+            <string key="bpmn:name" value="Recieve Ludoteca Request"/>
+            <string key="bpmn:id" value="Activity_0lu3j8v"/>
+            <string key="bpmn:messageOrigin" value="Activity_1ye848i"/>
+            <string key="bpmn:userTask" value="administrative3"/>
+            <int key="bpmn:execution" value="2"/>
+            <int key="bpmn:time" value="14"/>
+            <string key="bpmn:subTask" value="Activity_08pkgdt"/>
+            <date key="time:timestamp" value="127"/>
+            <int key="bpmn:instance" value="2"/>
+        </event>
+        <event>
+            <string key="bpmn:type" value="StandBy"/>
+            <string key="bpmn:id" value="Activity_1ye848i"/>
+            <string key="bpmn:execution" value="5"/>
+            <date key="time:timestamp" value="113"/>
+            <date key="time:endTime" value="127"/>
+            <date key="time:duration" value="14"/>
+            <int key="bpmn:instance" value="2"/>
+        </event>
+        <event>
+            <string key="bpmn:type" value="bpmn:SendTask"/>
+            <string key="bpmn:name" value="Send Request"/>
+            <string key="bpmn:id" value="Activity_1ye848i"/>
+            <string key="bpmn:messageDestiny" value="Activity_0lu3j8v"/>
+            <string key="bpmn:userTask" value="clien2"/>
+            <int key="bpmn:execution" value="5"/>
+            <int key="bpmn:time" value="13"/>
+            <string key="bpmn:subTask" value="Activity_1qu0c6s"/>
+            <date key="time:timestamp" value="127"/>
+            <int key="bpmn:instance" value="2"/>
+        </event>
+        <event>
+            <string key="bpmn:type" value="StandByMessage"/>
+            <string key="bpmn:id" value="Activity_0lu3j8v"/>
+            <string key="bpmn:execution" value="3"/>
+            <date key="time:timestamp" value="73"/>
+            <date key="time:endTime" value="136"/>
+            <date key="time:duration" value="63"/>
+            <int key="bpmn:instance" value="2"/>
+        </event>
+        <event>
+            <string key="bpmn:type" value="bpmn:ReceiveTask"/>
+            <string key="bpmn:name" value="Recieve Ludoteca Request"/>
+            <string key="bpmn:id" value="Activity_0lu3j8v"/>
+            <string key="bpmn:messageOrigin" value="Activity_1ye848i"/>
+            <string key="bpmn:userTask" value="administrative1"/>
+            <int key="bpmn:execution" value="3"/>
+            <int key="bpmn:time" value="12"/>
+            <string key="bpmn:subTask" value="Activity_08pkgdt"/>
+            <date key="time:timestamp" value="136"/>
+            <int key="bpmn:instance" value="2"/>
+        </event>
+        <event>
+            <string key="bpmn:type" value="StandBy"/>
+            <string key="bpmn:id" value="Activity_1ye848i"/>
+            <string key="bpmn:execution" value="6"/>
+            <date key="time:timestamp" value="113"/>
+            <date key="time:endTime" value="136"/>
+            <date key="time:duration" value="23"/>
+            <int key="bpmn:instance" value="2"/>
+        </event>
+        <event>
+            <string key="bpmn:type" value="bpmn:SendTask"/>
+            <string key="bpmn:name" value="Send Request"/>
+            <string key="bpmn:id" value="Activity_1ye848i"/>
+            <string key="bpmn:messageDestiny" value="Activity_0lu3j8v"/>
+            <string key="bpmn:userTask" value="client1"/>
+            <int key="bpmn:execution" value="6"/>
+            <int key="bpmn:time" value="13"/>
+            <string key="bpmn:subTask" value="Activity_1qu0c6s"/>
+            <date key="time:timestamp" value="136"/>
+            <int key="bpmn:instance" value="2"/>
+        </event>
+        <event>
+            <string key="bpmn:type" value="StandByMessage"/>
+            <string key="bpmn:id" value="Activity_0lu3j8v"/>
+            <string key="bpmn:execution" value="5"/>
+            <date key="time:timestamp" value="73"/>
+            <date key="time:endTime" value="140"/>
+            <date key="time:duration" value="67"/>
+            <int key="bpmn:instance" value="2"/>
+        </event>
+        <event>
+            <string key="bpmn:type" value="bpmn:ReceiveTask"/>
+            <string key="bpmn:name" value="Recieve Ludoteca Request"/>
+            <string key="bpmn:id" value="Activity_0lu3j8v"/>
+            <string key="bpmn:messageOrigin" value="Activity_1ye848i"/>
+            <string key="bpmn:userTask" value="administrative2"/>
+            <int key="bpmn:execution" value="5"/>
+            <int key="bpmn:time" value="12"/>
+            <string key="bpmn:subTask" value="Activity_08pkgdt"/>
+            <date key="time:timestamp" value="140"/>
+            <int key="bpmn:instance" value="2"/>
+        </event>
+        <event>
+            <string key="bpmn:type" value="StandByMessage"/>
+            <string key="bpmn:id" value="Activity_0lu3j8v"/>
+            <string key="bpmn:execution" value="4"/>
+            <date key="time:timestamp" value="73"/>
+            <date key="time:endTime" value="141"/>
+            <date key="time:duration" value="68"/>
+            <int key="bpmn:instance" value="2"/>
+        </event>
+        <event>
+            <string key="bpmn:type" value="bpmn:ReceiveTask"/>
+            <string key="bpmn:name" value="Recieve Ludoteca Request"/>
+            <string key="bpmn:id" value="Activity_0lu3j8v"/>
+            <string key="bpmn:messageOrigin" value="Activity_1ye848i"/>
+            <string key="bpmn:userTask" value="administrative3"/>
+            <int key="bpmn:execution" value="4"/>
+            <int key="bpmn:time" value="12"/>
+            <string key="bpmn:subTask" value="Activity_08pkgdt"/>
+            <date key="time:timestamp" value="141"/>
+            <int key="bpmn:instance" value="2"/>
+        </event>
+        <event>
+            <string key="bpmn:type" value="StandByMessage"/>
+            <string key="bpmn:id" value="Activity_0lu3j8v"/>
+            <string key="bpmn:execution" value="6"/>
+            <date key="time:timestamp" value="73"/>
+            <date key="time:endTime" value="149"/>
+            <date key="time:duration" value="76"/>
+            <int key="bpmn:instance" value="2"/>
+        </event>
+        <event>
+            <string key="bpmn:type" value="bpmn:ReceiveTask"/>
+            <string key="bpmn:name" value="Recieve Ludoteca Request"/>
+            <string key="bpmn:id" value="Activity_0lu3j8v"/>
+            <string key="bpmn:messageOrigin" value="Activity_1ye848i"/>
+            <string key="bpmn:userTask" value="administrative1"/>
+            <int key="bpmn:execution" value="6"/>
+            <int key="bpmn:time" value="14"/>
+            <string key="bpmn:subTask" value="Activity_08pkgdt"/>
+            <date key="time:timestamp" value="149"/>
+            <int key="bpmn:instance" value="2"/>
+        </event>
+        <event>
+            <string key="bpmn:type" value="bpmn:UserTask"/>
+            <string key="bpmn:name" value="Assess the Request"/>
+            <string key="bpmn:id" value="Activity_08pkgdt"/>
+            <string key="bpmn:userTask" value="commitee1"/>
+            <int key="bpmn:execution" value="1"/>
+            <int key="bpmn:time" value="16"/>
+            <string key="bpmn:subTask" value="Activity_0mbqo4h"/>
+            <date key="time:timestamp" value="163"/>
+            <int key="bpmn:instance" value="2"/>
+        </event>
+        <event>
+            <string key="bpmn:type" value="bpmn:Task"/>
+            <string key="bpmn:name" value="Public the resolution"/>
+            <string key="bpmn:id" value="Activity_0mbqo4h"/>
+            <string key="bpmn:userTask" value="administrative2"/>
+            <int key="bpmn:execution" value="1"/>
+            <int key="bpmn:time" value="14"/>
+            <string key="bpmn:subTask" value="Activity_0chu488"/>
+            <date key="time:timestamp" value="179"/>
+            <int key="bpmn:instance" value="2"/>
+        </event>
+        <event>
+            <string key="bpmn:type" value="bpmn:SendTask"/>
+            <string key="bpmn:name" value="Inform about resolution"/>
+            <string key="bpmn:id" value="Activity_0chu488"/>
+            <string key="bpmn:messageDestiny" value="Activity_1qu0c6s"/>
+            <string key="bpmn:userTask" value="administrative1"/>
+            <int key="bpmn:execution" value="1"/>
+            <int key="bpmn:time" value="16"/>
+            <string key="bpmn:subTask" value="Activity_0xuu3c1"/>
+            <date key="time:timestamp" value="193"/>
+            <int key="bpmn:instance" value="2"/>
+        </event>
+        <event>
+            <string key="bpmn:type" value="StandByMessage"/>
+            <string key="bpmn:id" value="Activity_1qu0c6s"/>
+            <string key="bpmn:execution" value="1"/>
+            <date key="time:timestamp" value="149"/>
+            <date key="time:endTime" value="209"/>
+            <date key="time:duration" value="60"/>
+            <int key="bpmn:instance" value="2"/>
+        </event>
+        <event>
+            <string key="bpmn:type" value="bpmn:ReceiveTask"/>
+            <string key="bpmn:name" value="Recieve information"/>
+            <string key="bpmn:id" value="Activity_1qu0c6s"/>
+            <string key="bpmn:messageOrigin" value="Activity_0chu488"/>
+            <string key="bpmn:userTask" value="client1"/>
+            <int key="bpmn:execution" value="1"/>
+            <int key="bpmn:time" value="15"/>
+            <string key="bpmn:subTask" value="Activity_0mr2w9y"/>
+            <date key="time:timestamp" value="209"/>
+            <int key="bpmn:instance" value="2"/>
+        </event>
+        <event>
+            <string key="bpmn:type" value="bpmn:SendTask"/>
+            <string key="bpmn:name" value="Inform about resolution"/>
+            <string key="bpmn:id" value="Activity_0chu488"/>
+            <string key="bpmn:messageDestiny" value="Activity_1qu0c6s"/>
+            <string key="bpmn:userTask" value="administrative3"/>
+            <int key="bpmn:execution" value="2"/>
+            <int key="bpmn:time" value="14"/>
+            <string key="bpmn:subTask" value="Activity_0xuu3c1"/>
+            <date key="time:timestamp" value="209"/>
+            <int key="bpmn:instance" value="2"/>
+        </event>
+        <event>
+            <string key="bpmn:type" value="bpmn:Task"/>
+            <string key="bpmn:name" value="Parents want to claim?"/>
+            <string key="bpmn:id" value="Activity_0mr2w9y"/>
+            <string key="bpmn:userTask" value="clien2"/>
+            <int key="bpmn:execution" value="1"/>
+            <int key="bpmn:time" value="12"/>
+            <string key="bpmn:subTask" value="Gateway_19f6z5h"/>
+            <date key="time:timestamp" value="224"/>
+            <int key="bpmn:instance" value="2"/>
+        </event>
+        <event>
+            <string key="bpmn:type" value="bpmn:ExclusiveGateway"/>
+            <string key="bpmn:name" value="Unnamed"/>
+            <string key="bpmn:id" value="Gateway_19f6z5h"/>
+            <string key="bpmn:subTask" value="Gateway_00ouu2n"/>
+            <date key="time:timestamp" value="236"/>
+            <int key="bpmn:instance" value="2"/>
+        </event>
+        <event>
+            <string key="bpmn:type" value="bpmn:ExclusiveGateway"/>
+            <string key="bpmn:name" value="Unnamed"/>
+            <string key="bpmn:id" value="Gateway_00ouu2n"/>
+            <string key="bpmn:subTask" value="Activity_07boq00"/>
+            <date key="time:timestamp" value="236"/>
+            <int key="bpmn:instance" value="2"/>
+        </event>
+        <event>
+            <string key="bpmn:type" value="bpmn:SendTask"/>
+            <string key="bpmn:name" value="Send documentation"/>
+            <string key="bpmn:id" value="Activity_07boq00"/>
+            <string key="bpmn:messageDestiny" value="Activity_0xuu3c1"/>
+            <string key="bpmn:userTask" value="client3"/>
+            <int key="bpmn:execution" value="1"/>
+            <int key="bpmn:time" value="15"/>
+            <string key="bpmn:subTask" value="Activity_1x6iqxc"/>
+            <date key="time:timestamp" value="236"/>
+            <int key="bpmn:instance" value="2"/>
+        </event>
+        <event>
+            <string key="bpmn:type" value="StandByMessage"/>
+            <string key="bpmn:id" value="Activity_0xuu3c1"/>
+            <string key="bpmn:execution" value="1"/>
+            <date key="time:timestamp" value="223"/>
+            <date key="time:endTime" value="251"/>
+            <date key="time:duration" value="28"/>
+            <int key="bpmn:instance" value="2"/>
+        </event>
+        <event>
+            <string key="bpmn:type" value="bpmn:ReceiveTask"/>
+            <string key="bpmn:name" value="Recieve documentation"/>
+            <string key="bpmn:id" value="Activity_0xuu3c1"/>
+            <string key="bpmn:messageOrigin" value="Activity_07boq00"/>
+            <string key="bpmn:userTask" value="administrative1"/>
+            <int key="bpmn:execution" value="1"/>
+            <int key="bpmn:time" value="10"/>
+            <string key="bpmn:subTask" value="Activity_19xnx7n"/>
+            <date key="time:timestamp" value="251"/>
+            <int key="bpmn:instance" value="2"/>
+        </event>
+        <event>
+            <string key="bpmn:type" value="bpmn:SendTask"/>
+            <string key="bpmn:name" value="Send documentation"/>
+            <string key="bpmn:id" value="Activity_07boq00"/>
+            <string key="bpmn:messageDestiny" value="Activity_0xuu3c1"/>
+            <string key="bpmn:userTask" value="client1"/>
+            <int key="bpmn:execution" value="2"/>
+            <int key="bpmn:time" value="13"/>
+            <string key="bpmn:subTask" value="Activity_1x6iqxc"/>
+            <date key="time:timestamp" value="251"/>
+            <int key="bpmn:instance" value="2"/>
+        </event>
+        <event>
+            <string key="bpmn:type" value="StandByMessage"/>
+            <string key="bpmn:id" value="Activity_0xuu3c1"/>
+            <string key="bpmn:execution" value="2"/>
+            <date key="time:timestamp" value="261"/>
+            <date key="time:endTime" value="264"/>
+            <date key="time:duration" value="3"/>
+            <int key="bpmn:instance" value="2"/>
+        </event>
+        <event>
+            <string key="bpmn:type" value="bpmn:ReceiveTask"/>
+            <string key="bpmn:name" value="Recieve documentation"/>
+            <string key="bpmn:id" value="Activity_0xuu3c1"/>
+            <string key="bpmn:messageOrigin" value="Activity_07boq00"/>
+            <string key="bpmn:userTask" value="administrative3"/>
+            <int key="bpmn:execution" value="2"/>
+            <int key="bpmn:time" value="9"/>
+            <string key="bpmn:subTask" value="Activity_19xnx7n"/>
+            <date key="time:timestamp" value="264"/>
+            <int key="bpmn:instance" value="2"/>
+        </event>
+        <event>
+            <string key="bpmn:type" value="bpmn:SendTask"/>
+            <string key="bpmn:name" value="Send documentation"/>
+            <string key="bpmn:id" value="Activity_07boq00"/>
+            <string key="bpmn:messageDestiny" value="Activity_0xuu3c1"/>
+            <string key="bpmn:userTask" value="client3"/>
+            <int key="bpmn:execution" value="3"/>
+            <int key="bpmn:time" value="11"/>
+            <string key="bpmn:subTask" value="Activity_1x6iqxc"/>
+            <date key="time:timestamp" value="264"/>
+            <int key="bpmn:instance" value="2"/>
+        </event>
+        <event>
+            <string key="bpmn:type" value="StandByMessage"/>
+            <string key="bpmn:id" value="Activity_0xuu3c1"/>
+            <string key="bpmn:execution" value="3"/>
+            <date key="time:timestamp" value="273"/>
+            <date key="time:endTime" value="275"/>
+            <date key="time:duration" value="2"/>
+            <int key="bpmn:instance" value="2"/>
+        </event>
+        <event>
+            <string key="bpmn:type" value="bpmn:ReceiveTask"/>
+            <string key="bpmn:name" value="Recieve documentation"/>
+            <string key="bpmn:id" value="Activity_0xuu3c1"/>
+            <string key="bpmn:messageOrigin" value="Activity_07boq00"/>
+            <string key="bpmn:userTask" value="administrative1"/>
+            <int key="bpmn:execution" value="3"/>
+            <int key="bpmn:time" value="9"/>
+            <string key="bpmn:subTask" value="Activity_19xnx7n"/>
+            <date key="time:timestamp" value="275"/>
+            <int key="bpmn:instance" value="2"/>
+        </event>
+        <event>
+            <string key="bpmn:type" value="bpmn:SendTask"/>
+            <string key="bpmn:name" value="Send documentation"/>
+            <string key="bpmn:id" value="Activity_07boq00"/>
+            <string key="bpmn:messageDestiny" value="Activity_0xuu3c1"/>
+            <string key="bpmn:userTask" value="clien2"/>
+            <int key="bpmn:execution" value="4"/>
+            <int key="bpmn:time" value="16"/>
+            <string key="bpmn:subTask" value="Activity_1x6iqxc"/>
+            <date key="time:timestamp" value="275"/>
+            <int key="bpmn:instance" value="2"/>
+        </event>
+        <event>
+            <string key="bpmn:type" value="StandByMessage"/>
+            <string key="bpmn:id" value="Activity_0xuu3c1"/>
+            <string key="bpmn:execution" value="4"/>
+            <date key="time:timestamp" value="284"/>
+            <date key="time:endTime" value="291"/>
+            <date key="time:duration" value="7"/>
+            <int key="bpmn:instance" value="2"/>
+        </event>
+        <event>
+            <string key="bpmn:type" value="bpmn:ReceiveTask"/>
+            <string key="bpmn:name" value="Recieve documentation"/>
+            <string key="bpmn:id" value="Activity_0xuu3c1"/>
+            <string key="bpmn:messageOrigin" value="Activity_07boq00"/>
+            <string key="bpmn:userTask" value="administrative3"/>
+            <int key="bpmn:execution" value="4"/>
+            <int key="bpmn:time" value="8"/>
+            <string key="bpmn:subTask" value="Activity_19xnx7n"/>
+            <date key="time:timestamp" value="291"/>
+            <int key="bpmn:instance" value="2"/>
+        </event>
+        <event>
+            <string key="bpmn:type" value="bpmn:SendTask"/>
+            <string key="bpmn:name" value="Send documentation"/>
+            <string key="bpmn:id" value="Activity_07boq00"/>
+            <string key="bpmn:messageDestiny" value="Activity_0xuu3c1"/>
+            <string key="bpmn:userTask" value="client1"/>
+            <int key="bpmn:execution" value="5"/>
+            <int key="bpmn:time" value="13"/>
+            <string key="bpmn:subTask" value="Activity_1x6iqxc"/>
+            <date key="time:timestamp" value="291"/>
+            <int key="bpmn:instance" value="2"/>
+        </event>
+        <event>
+            <string key="bpmn:type" value="StandByMessage"/>
+            <string key="bpmn:id" value="Activity_0xuu3c1"/>
+            <string key="bpmn:execution" value="5"/>
+            <date key="time:timestamp" value="299"/>
+            <date key="time:endTime" value="304"/>
+            <date key="time:duration" value="5"/>
+            <int key="bpmn:instance" value="2"/>
+        </event>
+        <event>
+            <string key="bpmn:type" value="bpmn:ReceiveTask"/>
+            <string key="bpmn:name" value="Recieve documentation"/>
+            <string key="bpmn:id" value="Activity_0xuu3c1"/>
+            <string key="bpmn:messageOrigin" value="Activity_07boq00"/>
+            <string key="bpmn:userTask" value="administrative2"/>
+            <int key="bpmn:execution" value="5"/>
+            <int key="bpmn:time" value="8"/>
+            <string key="bpmn:subTask" value="Activity_19xnx7n"/>
+            <date key="time:timestamp" value="304"/>
+            <int key="bpmn:instance" value="2"/>
+        </event>
+        <event>
+            <string key="bpmn:type" value="bpmn:SendTask"/>
+            <string key="bpmn:name" value="Send documentation"/>
+            <string key="bpmn:id" value="Activity_07boq00"/>
+            <string key="bpmn:messageDestiny" value="Activity_0xuu3c1"/>
+            <string key="bpmn:userTask" value="client3"/>
+            <int key="bpmn:execution" value="6"/>
+            <int key="bpmn:time" value="13"/>
+            <string key="bpmn:subTask" value="Activity_1x6iqxc"/>
+            <date key="time:timestamp" value="304"/>
+            <int key="bpmn:instance" value="2"/>
+        </event>
+        <event>
+            <string key="bpmn:type" value="StandByMessage"/>
+            <string key="bpmn:id" value="Activity_0xuu3c1"/>
+            <string key="bpmn:execution" value="6"/>
+            <date key="time:timestamp" value="312"/>
+            <date key="time:endTime" value="317"/>
+            <date key="time:duration" value="5"/>
+            <int key="bpmn:instance" value="2"/>
+        </event>
+        <event>
+            <string key="bpmn:type" value="bpmn:ReceiveTask"/>
+            <string key="bpmn:name" value="Recieve documentation"/>
+            <string key="bpmn:id" value="Activity_0xuu3c1"/>
+            <string key="bpmn:messageOrigin" value="Activity_07boq00"/>
+            <string key="bpmn:userTask" value="administrative3"/>
+            <int key="bpmn:execution" value="6"/>
+            <int key="bpmn:time" value="8"/>
+            <string key="bpmn:subTask" value="Activity_19xnx7n"/>
+            <date key="time:timestamp" value="317"/>
+            <int key="bpmn:instance" value="2"/>
+        </event>
+        <event>
+            <string key="bpmn:type" value="bpmn:Task"/>
+            <string key="bpmn:name" value="Reevalute documentation"/>
+            <string key="bpmn:id" value="Activity_19xnx7n"/>
+            <string key="bpmn:userTask" value="commitee1"/>
+            <int key="bpmn:execution" value="1"/>
+            <int key="bpmn:time" value="18"/>
+            <string key="bpmn:subTask" value="Activity_0c03ghp"/>
+            <date key="time:timestamp" value="325"/>
+            <int key="bpmn:instance" value="2"/>
+        </event>
+        <event>
+            <string key="bpmn:type" value="bpmn:Task"/>
+            <string key="bpmn:name" value="Public the final list"/>
+            <string key="bpmn:id" value="Activity_0c03ghp"/>
+            <string key="bpmn:userTask" value="administrative2"/>
+            <int key="bpmn:execution" value="1"/>
+            <int key="bpmn:time" value="14"/>
+            <string key="bpmn:subTask" value="Activity_0dd9m33"/>
+            <date key="time:timestamp" value="343"/>
+            <int key="bpmn:instance" value="2"/>
+        </event>
+        <event>
+            <string key="bpmn:type" value="bpmn:SendTask"/>
+            <string key="bpmn:name" value="Inform about resolution"/>
+            <string key="bpmn:id" value="Activity_0dd9m33"/>
+            <string key="bpmn:messageDestiny" value="Activity_1x6iqxc"/>
+            <string key="bpmn:userTask" value="administrative1"/>
+            <int key="bpmn:execution" value="1"/>
+            <int key="bpmn:time" value="11"/>
+            <string key="bpmn:subTask" value="Activity_06cj315"/>
+            <date key="time:timestamp" value="357"/>
+            <int key="bpmn:instance" value="2"/>
+        </event>
+        <event>
+            <string key="bpmn:type" value="StandByMessage"/>
+            <string key="bpmn:id" value="Activity_1x6iqxc"/>
+            <string key="bpmn:execution" value="1"/>
+            <date key="time:timestamp" value="317"/>
+            <date key="time:endTime" value="368"/>
+            <date key="time:duration" value="51"/>
+            <int key="bpmn:instance" value="2"/>
+        </event>
+        <event>
+            <string key="bpmn:type" value="bpmn:ReceiveTask"/>
+            <string key="bpmn:name" value="Recieve the resolution"/>
+            <string key="bpmn:id" value="Activity_1x6iqxc"/>
+            <string key="bpmn:messageOrigin" value="Activity_0dd9m33"/>
+            <string key="bpmn:userTask" value="client1"/>
+            <int key="bpmn:execution" value="1"/>
+            <int key="bpmn:time" value="12"/>
+            <string key="bpmn:subTask" value="Activity_0i8kz5y"/>
+            <date key="time:timestamp" value="368"/>
+            <int key="bpmn:instance" value="2"/>
+        </event>
+        <event>
+            <string key="bpmn:type" value="bpmn:SendTask"/>
+            <string key="bpmn:name" value="Inform about resolution"/>
+            <string key="bpmn:id" value="Activity_0dd9m33"/>
+            <string key="bpmn:messageDestiny" value="Activity_1x6iqxc"/>
+            <string key="bpmn:userTask" value="administrative3"/>
+            <int key="bpmn:execution" value="2"/>
+            <int key="bpmn:time" value="16"/>
+            <string key="bpmn:subTask" value="Activity_06cj315"/>
+            <date key="time:timestamp" value="368"/>
+            <int key="bpmn:instance" value="2"/>
+        </event>
+        <event>
+            <string key="bpmn:type" value="bpmn:SendTask"/>
+            <string key="bpmn:name" value="Make the payment"/>
+            <string key="bpmn:id" value="Activity_0i8kz5y"/>
+            <string key="bpmn:messageDestiny" value="Activity_06cj315"/>
+            <string key="bpmn:userTask" value="client3"/>
+            <int key="bpmn:execution" value="1"/>
+            <int key="bpmn:time" value="17"/>
+            <string key="bpmn:subTask" value="Event_1bppajv"/>
+            <date key="time:timestamp" value="380"/>
+            <int key="bpmn:instance" value="2"/>
+        </event>
+        <event>
+            <string key="bpmn:type" value="StandByMessage"/>
+            <string key="bpmn:id" value="Activity_06cj315"/>
+            <string key="bpmn:execution" value="1"/>
+            <date key="time:timestamp" value="384"/>
+            <date key="time:endTime" value="397"/>
+            <date key="time:duration" value="13"/>
+            <int key="bpmn:instance" value="2"/>
+        </event>
+        <event>
+            <string key="bpmn:type" value="bpmn:ReceiveTask"/>
+            <string key="bpmn:name" value="Recieve payment"/>
+            <string key="bpmn:id" value="Activity_06cj315"/>
+            <string key="bpmn:messageOrigin" value="Activity_0i8kz5y"/>
+            <string key="bpmn:userTask" value="administrative2"/>
+            <int key="bpmn:execution" value="1"/>
+            <int key="bpmn:time" value="14"/>
+            <string key="bpmn:subTask" value="Event_15940v7"/>
+            <date key="time:timestamp" value="397"/>
+            <int key="bpmn:instance" value="2"/>
+        </event>
+        <event>
+            <string key="bpmn:type" value="bpmn:SendTask"/>
+            <string key="bpmn:name" value="Make the payment"/>
+            <string key="bpmn:id" value="Activity_0i8kz5y"/>
+            <string key="bpmn:messageDestiny" value="Activity_06cj315"/>
+            <string key="bpmn:userTask" value="client1"/>
+            <int key="bpmn:execution" value="2"/>
+            <int key="bpmn:time" value="18"/>
+            <string key="bpmn:subTask" value="Event_1bppajv"/>
+            <date key="time:timestamp" value="397"/>
+            <int key="bpmn:instance" value="2"/>
+        </event>
+        <event>
+            <string key="bpmn:type" value="StandByMessage"/>
+            <string key="bpmn:id" value="Activity_06cj315"/>
+            <string key="bpmn:execution" value="2"/>
+            <date key="time:timestamp" value="411"/>
+            <date key="time:endTime" value="415"/>
+            <date key="time:duration" value="4"/>
+            <int key="bpmn:instance" value="2"/>
+        </event>
+        <event>
+            <string key="bpmn:type" value="bpmn:ReceiveTask"/>
+            <string key="bpmn:name" value="Recieve payment"/>
+            <string key="bpmn:id" value="Activity_06cj315"/>
+            <string key="bpmn:messageOrigin" value="Activity_0i8kz5y"/>
+            <string key="bpmn:userTask" value="administrative1"/>
+            <int key="bpmn:execution" value="2"/>
+            <int key="bpmn:time" value="16"/>
+            <string key="bpmn:subTask" value="Event_15940v7"/>
+            <date key="time:timestamp" value="415"/>
+            <int key="bpmn:instance" value="2"/>
+        </event>
+        <event>
+            <string key="bpmn:type" value="bpmn:SendTask"/>
+            <string key="bpmn:name" value="Make the payment"/>
+            <string key="bpmn:id" value="Activity_0i8kz5y"/>
+            <string key="bpmn:messageDestiny" value="Activity_06cj315"/>
+            <string key="bpmn:userTask" value="client1"/>
+            <int key="bpmn:execution" value="3"/>
+            <int key="bpmn:time" value="14"/>
+            <string key="bpmn:subTask" value="Event_1bppajv"/>
+            <date key="time:timestamp" value="415"/>
+            <int key="bpmn:instance" value="2"/>
+        </event>
+        <event>
+            <string key="bpmn:type" value="bpmn:SendTask"/>
+            <string key="bpmn:name" value="Make the payment"/>
+            <string key="bpmn:id" value="Activity_0i8kz5y"/>
+            <string key="bpmn:messageDestiny" value="Activity_06cj315"/>
+            <string key="bpmn:userTask" value="client3"/>
+            <int key="bpmn:execution" value="4"/>
+            <int key="bpmn:time" value="12"/>
+            <string key="bpmn:subTask" value="Event_1bppajv"/>
+            <date key="time:timestamp" value="429"/>
+            <int key="bpmn:instance" value="2"/>
+        </event>
+        <event>
+            <string key="bpmn:type" value="bpmn:ReceiveTask"/>
+            <string key="bpmn:name" value="Recieve payment"/>
+            <string key="bpmn:id" value="Activity_06cj315"/>
+            <string key="bpmn:messageOrigin" value="Activity_0i8kz5y"/>
+            <string key="bpmn:userTask" value="administrative1"/>
+            <int key="bpmn:execution" value="3"/>
+            <int key="bpmn:time" value="12"/>
+            <string key="bpmn:subTask" value="Event_15940v7"/>
+            <date key="time:timestamp" value="431"/>
+            <int key="bpmn:instance" value="2"/>
+        </event>
+        <event>
+            <string key="bpmn:type" value="bpmn:SendTask"/>
+            <string key="bpmn:name" value="Make the payment"/>
+            <string key="bpmn:id" value="Activity_0i8kz5y"/>
+            <string key="bpmn:messageDestiny" value="Activity_06cj315"/>
+            <string key="bpmn:userTask" value="clien2"/>
+            <int key="bpmn:execution" value="5"/>
+            <int key="bpmn:time" value="12"/>
+            <string key="bpmn:subTask" value="Event_1bppajv"/>
+            <date key="time:timestamp" value="441"/>
+            <int key="bpmn:instance" value="2"/>
+        </event>
+        <event>
+            <string key="bpmn:type" value="bpmn:ReceiveTask"/>
+            <string key="bpmn:name" value="Recieve payment"/>
+            <string key="bpmn:id" value="Activity_06cj315"/>
+            <string key="bpmn:messageOrigin" value="Activity_0i8kz5y"/>
+            <string key="bpmn:userTask" value="administrative2"/>
+            <int key="bpmn:execution" value="4"/>
+            <int key="bpmn:time" value="12"/>
+            <string key="bpmn:subTask" value="Event_15940v7"/>
+            <date key="time:timestamp" value="443"/>
+            <int key="bpmn:instance" value="2"/>
+        </event>
+        <event>
+            <string key="bpmn:type" value="bpmn:SendTask"/>
+            <string key="bpmn:name" value="Make the payment"/>
+            <string key="bpmn:id" value="Activity_0i8kz5y"/>
+            <string key="bpmn:messageDestiny" value="Activity_06cj315"/>
+            <string key="bpmn:userTask" value="client1"/>
+            <int key="bpmn:execution" value="6"/>
+            <int key="bpmn:time" value="14"/>
+            <string key="bpmn:subTask" value="Event_1bppajv"/>
+            <date key="time:timestamp" value="453"/>
+            <int key="bpmn:instance" value="2"/>
+        </event>
+        <event>
+            <string key="bpmn:type" value="bpmn:ReceiveTask"/>
+            <string key="bpmn:name" value="Recieve payment"/>
+            <string key="bpmn:id" value="Activity_06cj315"/>
+            <string key="bpmn:messageOrigin" value="Activity_0i8kz5y"/>
+            <string key="bpmn:userTask" value="administrative3"/>
+            <int key="bpmn:execution" value="5"/>
+            <int key="bpmn:time" value="15"/>
+            <string key="bpmn:subTask" value="Event_15940v7"/>
+            <date key="time:timestamp" value="455"/>
+            <int key="bpmn:instance" value="2"/>
+        </event>
+        <event>
+            <string key="bpmn:type" value="bpmn:EndEvent"/>
+            <string key="bpmn:name" value="Unnamed"/>
+            <string key="bpmn:id" value="Event_1bppajv"/>
+            <string key="bpmn:subTask" value=""/>
+            <date key="time:timestamp" value="467"/>
+            <int key="bpmn:instance" value="2"/>
+        </event>
+        <event>
+            <string key="bpmn:type" value="bpmn:ReceiveTask"/>
+            <string key="bpmn:name" value="Recieve payment"/>
+            <string key="bpmn:id" value="Activity_06cj315"/>
+            <string key="bpmn:messageOrigin" value="Activity_0i8kz5y"/>
+            <string key="bpmn:userTask" value="administrative1"/>
+            <int key="bpmn:execution" value="6"/>
+            <int key="bpmn:time" value="12"/>
+            <string key="bpmn:subTask" value="Event_15940v7"/>
+            <date key="time:timestamp" value="470"/>
+            <int key="bpmn:instance" value="2"/>
+        </event>
+        <event>
+            <string key="bpmn:type" value="bpmn:EndEvent"/>
+            <string key="bpmn:name" value="Unnamed"/>
+            <string key="bpmn:id" value="Event_15940v7"/>
+            <string key="bpmn:subTask" value=""/>
+            <date key="time:timestamp" value="482"/>
+            <int key="bpmn:instance" value="2"/>
+        </event>
+    </trace>
+</log>
